@@ -6,20 +6,23 @@
   "name": "WebGL Wasm Browser App",
   "shortName": "webgl",
   "sourceName": "WebGL.Template",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "tags": {
     "language": "C#",
     "type": "project"
   },
-  "preferNameDirectory": false,
-  "symbols": {},
-  "source": {
-    "exclude": [
-      "**/[Bb]in/**",
-      "**/[Oo]bj/**",
-      ".git/**",
-      "README.md",
-      "*.generated.sln"
-    ]
-  }
+  "sources": [
+    {
+      "source": "./",
+      "exclude": [
+        ".git/**",
+        "*.generated.sln",
+        "README.md",
+        "**/[Bb]in/**",
+        "**/[Oo]bj/**",
+        ".template.config/**/*",
+        "**/*.user"
+      ]
+    }
+  ]
 }
