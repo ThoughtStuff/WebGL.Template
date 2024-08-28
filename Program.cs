@@ -22,11 +22,11 @@ if (!GL.GetProgramParameter(shaderProgram, GL.LINK_STATUS))
 }
 GL.UseProgram(shaderProgram);
 
-// Create a buffer for the triangle's positions.
+// POSITIONS
+// Create a buffer for the triangle's vertex positions.
 var positionBuffer = GL.CreateBuffer();
 GL.BindBuffer(GL.ARRAY_BUFFER, positionBuffer);
-
-// Define the positions for the triangle.
+// Define the vertex positions for the triangle.
 Span<float> positions =
 [
     0.0f, 1.0f,
@@ -34,11 +34,15 @@ Span<float> positions =
     1.0f, -1.0f
 ];
 GL.BufferData(GL.ARRAY_BUFFER, positions, GL.STATIC_DRAW);
+// Tell WebGL how to pull out the positions from the position buffer into the vertexPosition attribute.
+var positionAttributeLocation = GL.GetAttribLocation(shaderProgram, "aVertexPosition");
+GL.VertexAttribPointer(positionAttributeLocation, 2, GL.FLOAT, false, 0, 0);
+GL.EnableVertexAttribArray(positionAttributeLocation);
 
+// COLORS
 // Create a buffer for the triangle's colors.
 var colorBuffer = GL.CreateBuffer();
 GL.BindBuffer(GL.ARRAY_BUFFER, colorBuffer);
-
 // Define the colors for each vertex of the triangle (Rainbow: Red, Green, Blue).
 Span<float> colors =
 [
@@ -47,15 +51,7 @@ Span<float> colors =
     0.0f, 0.0f, 1.0f, 1.0f  // Blue
 ];
 GL.BufferData(GL.ARRAY_BUFFER, colors, GL.STATIC_DRAW);
-
-// Tell WebGL how to pull out the positions from the position buffer into the vertexPosition attribute.
-GL.BindBuffer(GL.ARRAY_BUFFER, positionBuffer);
-var positionAttributeLocation = GL.GetAttribLocation(shaderProgram, "aVertexPosition");
-GL.VertexAttribPointer(positionAttributeLocation, 2, GL.FLOAT, false, 0, 0);
-GL.EnableVertexAttribArray(positionAttributeLocation);
-
 // Tell WebGL how to pull out the colors from the color buffer into the vertexColor attribute.
-GL.BindBuffer(GL.ARRAY_BUFFER, colorBuffer);
 var colorAttributeLocation = GL.GetAttribLocation(shaderProgram, "aVertexColor");
 GL.VertexAttribPointer(colorAttributeLocation, 4, GL.FLOAT, false, 0, 0);
 GL.EnableVertexAttribArray(colorAttributeLocation);
