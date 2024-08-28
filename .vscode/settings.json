@@ -10,8 +10,11 @@
         "LEQUAL",
         "mipmap",
         "NOTEQUAL",
+        "Parameterf",
+        "Parameteri",
         "premultiply",
         "renderbuffer",
+        "Storei",
         "webgl",
         "writemask"
     ]

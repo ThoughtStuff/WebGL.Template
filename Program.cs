@@ -16,7 +16,7 @@ var shaderProgram = GL.CreateProgram();
 GL.AttachShader(shaderProgram, vertexShader);
 GL.AttachShader(shaderProgram, fragmentShader);
 GL.LinkProgram(shaderProgram);
-if (!GL.GetProgramParameter(shaderProgram, GL.LINK_STATUS))
+if (!GL.GetProgramParameterBool(shaderProgram, GL.LINK_STATUS))
 {
     throw new Exception("Unable to initialize the shader program: " + GL.GetProgramInfoLog(shaderProgram));
 }
@@ -70,7 +70,7 @@ static JSObject LoadShader(int type, string source)
     GL.ShaderSource(shader, source);
     GL.CompileShader(shader);
 
-    if (!GL.GetShaderParameter(shader, GL.COMPILE_STATUS))
+    if (!GL.GetShaderParameterBool(shader, GL.COMPILE_STATUS))
     {
         GL.DeleteShader(shader);
         throw new Exception("An error occurred compiling the shaders.");
