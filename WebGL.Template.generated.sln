@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebGL.Template", "WebGL.Template.csproj", "{EEF3C050-4214-467F-B0A6-096255886BBB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EEF3C050-4214-467F-B0A6-096255886BBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEF3C050-4214-467F-B0A6-096255886BBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEF3C050-4214-467F-B0A6-096255886BBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEF3C050-4214-467F-B0A6-096255886BBB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {68DC0B93-E919-4D6C-8AAF-E0982359B8F8}
+	EndGlobalSection
+EndGlobal

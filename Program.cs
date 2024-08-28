@@ -4,11 +4,11 @@ using WebGL.Template;
 Console.WriteLine("Hello, from C#!");
 
 // Vertex shader program
-string vsSource = ResourceLoading.LoadEmbeddedResourceText("Shaders.vertex.glsl");
+string vsSource = ResourceLoading.LoadEmbeddedResourceText("Shaders/vertex.glsl");
 var vertexShader = LoadShader(GL.VERTEX_SHADER, vsSource);
 
 // Load and compile the fragment shader
-string fsSource = ResourceLoading.LoadEmbeddedResourceText("Shaders.fragment.glsl");
+string fsSource = ResourceLoading.LoadEmbeddedResourceText("Shaders/fragment.glsl");
 var fragmentShader = LoadShader(GL.FRAGMENT_SHADER, fsSource);
 
 // Create and link the shader program
@@ -33,7 +33,7 @@ Span<float> positions =
     -1.0f, -1.0f,
     1.0f, -1.0f
 ];
-Utility.GlBufferData(GL.ARRAY_BUFFER, positions, GL.STATIC_DRAW);
+GL.BufferData(GL.ARRAY_BUFFER, positions, GL.STATIC_DRAW);
 
 // Create a buffer for the triangle's colors.
 var colorBuffer = GL.CreateBuffer();
@@ -46,7 +46,7 @@ Span<float> colors =
     0.0f, 1.0f, 0.0f, 1.0f, // Green
     0.0f, 0.0f, 1.0f, 1.0f  // Blue
 ];
-Utility.GlBufferData(GL.ARRAY_BUFFER, colors, GL.STATIC_DRAW);
+GL.BufferData(GL.ARRAY_BUFFER, colors, GL.STATIC_DRAW);
 
 // Tell WebGL how to pull out the positions from the position buffer into the vertexPosition attribute.
 GL.BindBuffer(GL.ARRAY_BUFFER, positionBuffer);

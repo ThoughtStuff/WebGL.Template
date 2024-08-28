@@ -11,9 +11,15 @@
     "language": "C#",
     "type": "project"
   },
-  "preferNameDirectory": true,
+  "preferNameDirectory": false,
   "symbols": {},
   "source": {
-    "exclude": ["**/[Bb]in/**", "**/[Oo]bj/**", ".git/**", "README.md"]
+    "exclude": [
+      "**/[Bb]in/**",
+      "**/[Oo]bj/**",
+      ".git/**",
+      "README.md",
+      "*.generated.sln"
+    ]
   }
 }

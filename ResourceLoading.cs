@@ -4,12 +4,15 @@ namespace WebGL.Template;
 
 public class ResourceLoading
 {
-    public static string LoadEmbeddedResourceText(string resourceName)
+    public static string LoadEmbeddedResourceText(string resourcePath)
     {
         var assembly = Assembly.GetExecutingAssembly();
         var @namespace = typeof(ResourceLoading).Namespace;
-        using var stream = assembly.GetManifestResourceStream($"{@namespace}.{resourceName}") ??
-                           throw new InvalidOperationException($"Resource {resourceName} not found.");
+        resourcePath = resourcePath.Replace("/", ".")
+                                   .Replace("\\", ".");
+        var resourceName = $"{@namespace}.{resourcePath}";
+        using var stream = assembly.GetManifestResourceStream(resourceName) ??
+                           throw new InvalidOperationException($"Resource '{resourceName}' not found.");
         using var reader = new StreamReader(stream);
         return reader.ReadToEnd();
     }
