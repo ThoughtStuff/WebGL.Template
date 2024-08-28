@@ -1,6 +1,18 @@
 {
     "cSpell.words": [
+        "ATTRIBS",
+        "colorspace",
+        "DECR",
+        "DONT",
+        "framebuffer",
+        "GEQUAL",
         "glsl",
-        "webgl"
+        "LEQUAL",
+        "mipmap",
+        "NOTEQUAL",
+        "premultiply",
+        "renderbuffer",
+        "webgl",
+        "writemask"
     ]
 }

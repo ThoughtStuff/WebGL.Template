@@ -64,20 +64,4 @@ public static partial class GL
 
     [JSImport("gl.drawArrays", "main.js")]
     internal static partial void DrawArrays(int mode, int first, int count);
-
-    public const int VERTEX_SHADER = 0x8B31;
-    public const int FRAGMENT_SHADER = 0x8B30;
-    public const int COMPILE_STATUS = 0x8B81;
-    public const int LINK_STATUS = 0x8B82;
-    public const int ARRAY_BUFFER = 0x8892;
-    public const int STATIC_DRAW = 0x88E4;
-    public const int FLOAT = 0x1406;
-
-    public const int POINTS = 0x0000;
-    public const int LINES = 0x0001;
-    public const int LINE_LOOP = 0x0002;
-    public const int LINE_STRIP = 0x0003;
-    public const int TRIANGLES = 0x0004;
-
-    public const int COLOR_BUFFER_BIT = 0x00004000;
 }
