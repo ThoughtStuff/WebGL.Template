@@ -26,7 +26,59 @@ setModuleImports("main.js", {
 
 const config = getConfig();
 const exports = await getAssemblyExports(config.mainAssemblyName);
-const text = exports.MyClass.Greeting();
-console.log(text);
+
+// Setup input interop
+const keyDown = (e) => {
+  e.stopPropagation();
+  const shift = e.shiftKey;
+  const ctrl = e.ctrlKey;
+  const alt = e.altKey;
+  const repeat = e.repeat;
+  const code = e.keyCode;
+
+  exports.InputInterop.OnKeyDown(shift, ctrl, alt, repeat, code);
+};
+
+const keyUp = (e) => {
+  e.stopPropagation();
+  const shift = e.shiftKey;
+  const ctrl = e.ctrlKey;
+  const alt = e.altKey;
+  const code = e.keyCode;
+
+  exports.InputInterop.OnKeyUp(shift, ctrl, alt, code);
+};
+
+const mouseMove = (e) => {
+  const x = e.offsetX;
+  const y = e.offsetY;
+
+  exports.InputInterop.OnMouseMove(x, y);
+};
+
+const mouseDown = (e) => {
+  const shift = e.shiftKey;
+  const ctrl = e.ctrlKey;
+  const alt = e.altKey;
+  const button = e.button;
+
+  exports.InputInterop.OnMouseDown(shift, ctrl, alt, button);
+};
+
+const mouseUp = (e) => {
+  const shift = e.shiftKey;
+  const ctrl = e.ctrlKey;
+  const alt = e.altKey;
+  const button = e.button;
+
+  exports.InputInterop.OnMouseUp(shift, ctrl, alt, button);
+};
+
+canvas.addEventListener("keydown", keyDown, false);
+canvas.addEventListener("keyup", keyUp, false);
+canvas.addEventListener("mousemove", mouseMove, false);
+canvas.addEventListener("mousedown", mouseDown, false);
+canvas.addEventListener("mouseup", mouseUp, false);
+canvas.tabIndex = 1000;
 
 await dotnet.run();

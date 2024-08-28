@@ -86,12 +86,3 @@ static JSObject LoadShader(int type, string source)
 
     return shader;
 }
-
-public partial class MyClass
-{
-    [JSExport]
-    internal static string Greeting()
-    {
-        return "Hello, WebGL!";
-    }
-}
