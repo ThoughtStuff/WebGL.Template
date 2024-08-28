@@ -5,4 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Shaders\fragment.glsl" />
+    <EmbeddedResource Include="Shaders\vertex.glsl" />
+  </ItemGroup>
 </Project>

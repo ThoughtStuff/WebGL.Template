@@ -1,17 +1,27 @@
 <!DOCTYPE html>
-<!--  Licensed to the .NET Foundation under one or more agreements. -->
-<!-- The .NET Foundation licenses this file to you under the MIT license. -->
 <html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>WebGL.Template</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script type="module" src="./main.js"></script>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+      }
+      canvas {
+        display: block;
+        width: 100vw;
+        height: 100vh;
+      }
+    </style>
+  </head>
 
-<head>
-  <title>WebGL.Template</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script type='module' src="./main.js"></script>
-</head>
-
-<body>
-  <span id="out"></span>
-</body>
-
+  <body>
+    <canvas id="canvas"></canvas>
+  </body>
 </html>
