@@ -20,6 +20,8 @@
         "**/[Bb]in/**",
         "**/[Oo]bj/**",
         ".template.config/**/*",
+        "*.nuspec",
+        "icon.png",
         "**/*.user"
       ]
     }
