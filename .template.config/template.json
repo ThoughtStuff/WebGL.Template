@@ -20,7 +20,7 @@
         "**/[Bb]in/**",
         "**/[Oo]bj/**",
         ".template.config/**/*",
-        "*.nuspec",
+        "ThoughtStuff.WebGLTemplate.csproj",
         "icon.png",
         "**/*.user"
       ]
