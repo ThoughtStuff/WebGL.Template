@@ -361,4 +361,67 @@ public static partial class GL
 
     [JSImport("gl.viewport", "main.js")]
     internal static partial void Viewport(int x, int y, int width, int height);
+
+    [JSImport("gl.bufferData", "main.js")]
+    internal static partial void BufferData(int target, int size, int usage);
+
+    [JSImport("gl.bufferData", "main.js")]
+    internal static partial void BufferData(int target, JSObject data, int usage);
+
+    [JSImport("gl.bufferSubData", "main.js")]
+    internal static partial void BufferSubData(int target, int offset, JSObject data);
+
+    [JSImport("gl.compressedTexImage2D", "main.js")]
+    internal static partial void CompressedTexImage2D(int target, int level, int internalFormat, int width, int height, int border, JSObject data);
+
+    [JSImport("gl.compressedTexSubImage2D", "main.js")]
+    internal static partial void CompressedTexSubImage2D(int target, int level, int xOffset, int yOffset, int width, int height, int format, JSObject data);
+
+    [JSImport("gl.readPixels", "main.js")]
+    internal static partial void ReadPixels(int x, int y, int width, int height, int format, int type, JSObject pixels);
+
+    [JSImport("gl.texImage2D", "main.js")]
+    internal static partial void TexImage2D(int target, int level, int internalFormat, int width, int height, int border, int format, int type, JSObject pixels);
+
+    [JSImport("gl.texImage2D", "main.js")]
+    internal static partial void TexImage2D(int target, int level, int internalFormat, int format, int type, JSObject source);
+
+    [JSImport("gl.texSubImage2D", "main.js")]
+    internal static partial void TexSubImage2D(int target, int level, int xOffset, int yOffset, int width, int height, int format, int type, byte[] pixels);
+
+    [JSImport("gl.texSubImage2D", "main.js")]
+    internal static partial void TexSubImage2D(int target, int level, int xOffset, int yOffset, int format, int type, JSObject source);
+
+    [JSImport("gl.uniform1fv", "main.js")]
+    internal static partial void Uniform1fv(JSObject location, JSObject v);
+
+    [JSImport("gl.uniform2fv", "main.js")]
+    internal static partial void Uniform2fv(JSObject location, JSObject v);
+
+    [JSImport("gl.uniform3fv", "main.js")]
+    internal static partial void Uniform3fv(JSObject location, JSObject v);
+
+    [JSImport("gl.uniform4fv", "main.js")]
+    internal static partial void Uniform4fv(JSObject location, JSObject v);
+
+    [JSImport("gl.uniform1iv", "main.js")]
+    internal static partial void Uniform1iv(JSObject location, JSObject v);
+
+    [JSImport("gl.uniform2iv", "main.js")]
+    internal static partial void Uniform2iv(JSObject location, JSObject v);
+
+    [JSImport("gl.uniform3iv", "main.js")]
+    internal static partial void Uniform3iv(JSObject location, JSObject v);
+
+    [JSImport("gl.uniform4iv", "main.js")]
+    internal static partial void Uniform4iv(JSObject location, JSObject v);
+
+    [JSImport("gl.uniformMatrix2fv", "main.js")]
+    internal static partial void UniformMatrix2fv(JSObject location, bool transpose, JSObject value);
+
+    [JSImport("gl.uniformMatrix3fv", "main.js")]
+    internal static partial void UniformMatrix3fv(JSObject location, bool transpose, JSObject value);
+
+    [JSImport("gl.uniformMatrix4fv", "main.js")]
+    internal static partial void UniformMatrix4fv(JSObject location, bool transpose, JSObject value);
 }
