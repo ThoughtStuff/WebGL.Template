@@ -1,7 +1,15 @@
 using System.Runtime.InteropServices.JavaScript;
 using WebGL.Template;
 
-Console.WriteLine("Hello, from C#!");
+// Print information about the GL context
+var version = GL.GetParameterString(GL.VERSION);
+Console.WriteLine("GL Version: " + version);
+var vendor = GL.GetParameterString(GL.VENDOR);
+Console.WriteLine("GL Vendor: " + vendor);
+var renderer = GL.GetParameterString(GL.RENDERER);
+Console.WriteLine("GL Renderer: " + renderer);
+var glslVersion = GL.GetParameterString(GL.SHADING_LANGUAGE_VERSION);
+Console.WriteLine("GLSL Version: " + glslVersion);
 
 // Vertex shader program
 string vsSource = ResourceLoading.LoadEmbeddedResourceText("Shaders/vertex.glsl");
