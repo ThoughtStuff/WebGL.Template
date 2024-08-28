@@ -8,6 +8,8 @@
     <Description>A project template for creating WebGL-based WASM browser apps in C#.</Description>
     <PackageTags>dotnet-new;templates;webgl;wasm;webassembly</PackageTags>
     <PackageProjectUrl>https://github.com/ThoughtStuff/WebGL.Template</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
     <PackageType>Template</PackageType>
     <TargetFramework>net8.0</TargetFramework>
@@ -34,6 +36,7 @@
 
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="" />
+    <None Include="icon.png" Pack="true" PackagePath="" />
   </ItemGroup>
 
 </Project>
