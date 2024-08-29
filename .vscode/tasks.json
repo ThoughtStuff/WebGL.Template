@@ -1,0 +1,40 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "dotnet",
+      "task": "build",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$msCompile"],
+      "label": "dotnet: build"
+    },
+    {
+      "type": "shell",
+      "label": "dotnet: run",
+      "command": "dotnet",
+      "args": ["run", "--project", "WebGL.Template.csproj"],
+      "problemMatcher": ["$msCompile"]
+    },
+    {
+      "label": "dotnet: publish wasm",
+      "type": "shell",
+      "command": "dotnet",
+      "args": [
+        "publish",
+        "WebGL.Template.csproj",
+        "-r",
+        "browser-wasm",
+        "-c",
+        "Release"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    }
+  ]
+}
