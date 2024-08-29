@@ -6,7 +6,7 @@
   "name": "WebGL Wasm Browser App",
   "shortName": "webgl",
   "sourceName": "WebGL.Template",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "tags": {
     "language": "C#",
     "type": "project"
