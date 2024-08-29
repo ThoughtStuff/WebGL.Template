@@ -1,6 +1,19 @@
 # .NET WebGL Template
 
+```
+dotnet new webgl
+```
+
 This template is a starting point for creating .NET projects that target WebAssembly and leverage WebGL.
+
+Check out `Program.cs` for how easy it is to invoke WebGL functions from C#.
+
+```cs
+GL.ClearColor(0.39f, 0.58f, 0.93f, 1.0f);
+GL.Clear(GL.COLOR_BUFFER_BIT);
+```
+
+---
 
 The GL context is effectively exported by JS as follows:
 
