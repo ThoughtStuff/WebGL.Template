@@ -34,9 +34,9 @@ const keyDown = (e) => {
   const ctrl = e.ctrlKey;
   const alt = e.altKey;
   const repeat = e.repeat;
-  const code = e.keyCode;
+  const code = e.code;
 
-  exports.InputInterop.OnKeyDown(shift, ctrl, alt, repeat, code);
+  exports.InputInterop.OnKeyDown(code, shift, ctrl, alt, repeat);
 };
 
 const keyUp = (e) => {
@@ -44,9 +44,9 @@ const keyUp = (e) => {
   const shift = e.shiftKey;
   const ctrl = e.ctrlKey;
   const alt = e.altKey;
-  const code = e.keyCode;
+  const code = e.code;
 
-  exports.InputInterop.OnKeyUp(shift, ctrl, alt, code);
+  exports.InputInterop.OnKeyUp(code, shift, ctrl, alt);
 };
 
 const mouseMove = (e) => {

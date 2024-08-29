@@ -5,12 +5,12 @@ using System.Runtime.InteropServices.JavaScript;
 public static partial class InputInterop
 {
     [JSExport]
-    public static void OnKeyDown(bool shift, bool ctrl, bool alt, bool repeat, int code)
+    public static void OnKeyDown(string keyName, bool shift, bool ctrl, bool alt, bool repeat)
     {
     }
 
     [JSExport]
-    public static void OnKeyUp(bool shift, bool ctrl, bool alt, int code)
+    public static void OnKeyUp(string keyName, bool shift, bool ctrl, bool alt)
     {
     }
 
