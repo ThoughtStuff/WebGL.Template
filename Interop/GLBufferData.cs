@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using WebGL.Template.Interop;
 
 public static partial class GL
 {

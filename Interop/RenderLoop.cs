@@ -1,5 +1,7 @@
 using System.Runtime.InteropServices.JavaScript;
 
+// Global namespace to make JS consumption easy
+
 public static partial class RenderLoop
 {
     [JSExport]
