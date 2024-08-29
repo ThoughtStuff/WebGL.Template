@@ -82,7 +82,11 @@ canvas.addEventListener("mouseup", mouseUp, false);
 canvas.tabIndex = 1000;
 
 // Auto-resize canvas so framebuffer is always the same size as the canvas
-function checkCanvasResize() {
+function resizeCanvasToDisplaySize() {
+  // The canvas is styled to fill the window,
+  // but the framebuffer resolution is independent of the style
+  // and must be set on the canvas element directly.
+  // The webgl viewport must also be updated to match the framebuffer size.
   var devicePixelRatio = window.devicePixelRatio || 1.0;
   var displayWidth = canvas.clientWidth * devicePixelRatio;
   var displayHeight = canvas.clientHeight * devicePixelRatio;
@@ -92,11 +96,8 @@ function checkCanvasResize() {
     gl.viewport(0, 0, canvas.width, canvas.height);
   }
 }
-function checkCanvasResizeLoop() {
-  checkCanvasResize();
-  requestAnimationFrame(checkCanvasResizeLoop);
-}
-checkCanvasResizeLoop();
+window.addEventListener('resize', resizeCanvasToDisplaySize);
+resizeCanvasToDisplaySize();
 
 // Setup render loop
 function renderFrame() {
