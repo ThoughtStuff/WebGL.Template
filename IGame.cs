@@ -1,11 +1,6 @@
 namespace WebGL.Template;
 
-public interface IShaderLoader
-{
-    void LoadShader(string vertexShaderName, string fragmentShaderName);
-}
-
-public interface IGameEngine
+public interface IGame
 {
     /// <summary>
     /// Creates initial resources for the game scene.

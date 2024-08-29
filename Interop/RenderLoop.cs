@@ -8,7 +8,7 @@ public static partial class RenderLoop
     [JSExport]
     public static void Render()
     {
-        GameEngineSingleton.Instance?.Render();
+        GameSingleton.Instance?.Render();
         // NOTE: If you throw an exception here it will kill the render loop
     }
 }
