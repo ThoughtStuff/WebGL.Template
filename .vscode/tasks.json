@@ -35,6 +35,28 @@
         "reveal": "always",
         "panel": "shared"
       }
+    },
+    {
+      "label": "dotnet: publish wasm and show output",
+      "type": "shell",
+      "windows": {
+        "command": "explorer",
+        "args": ["bin\\Release\\net8.0\\publish"]
+      },
+      "osx": {
+        "command": "open",
+        "args": ["bin/Release/net8.0/publish"]
+      },
+      "linux": {
+        "command": "xdg-open",
+        "args": ["bin/Release/net8.0/publish"]
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "dependsOn": "dotnet: publish wasm"
     }
   ]
 }
