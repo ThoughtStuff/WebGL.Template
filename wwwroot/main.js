@@ -81,4 +81,11 @@ canvas.addEventListener("mousedown", mouseDown, false);
 canvas.addEventListener("mouseup", mouseUp, false);
 canvas.tabIndex = 1000;
 
+// Setup render loop
+function renderFrame() {
+  exports.RenderLoop.Render();
+  requestAnimationFrame(renderFrame);
+}
+requestAnimationFrame(renderFrame);
+
 await dotnet.run();

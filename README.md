@@ -7,6 +7,7 @@ dotnet new webgl
 This template is a starting point for creating .NET projects that target WebAssembly and leverage WebGL.
 
 Check out `Program.cs` for how easy it is to invoke WebGL functions from C#.
+See `RenderLoop.cs` for the Render method that is called every frame.
 
 ```cs
 GL.ClearColor(0.39f, 0.58f, 0.93f, 1.0f);

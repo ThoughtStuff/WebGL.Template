@@ -68,8 +68,7 @@ GL.EnableVertexAttribArray(colorAttributeLocation);
 GL.ClearColor(0.39f, 0.58f, 0.93f, 1.0f);
 GL.Clear(GL.COLOR_BUFFER_BIT);
 
-// Draw the triangle
-GL.DrawArrays(GL.TRIANGLES, 0, 3);
+// See RenderLoop.cs for the Render method
 
 // Function to load and compile shaders
 static JSObject LoadShader(int type, string source)
