@@ -81,6 +81,23 @@ canvas.addEventListener("mousedown", mouseDown, false);
 canvas.addEventListener("mouseup", mouseUp, false);
 canvas.tabIndex = 1000;
 
+// Auto-resize canvas so framebuffer is always the same size as the canvas
+function checkCanvasResize() {
+  var devicePixelRatio = window.devicePixelRatio || 1.0;
+  var displayWidth = canvas.clientWidth * devicePixelRatio;
+  var displayHeight = canvas.clientHeight * devicePixelRatio;
+  if (canvas.width != displayWidth || canvas.height != displayHeight) {
+    canvas.width = displayWidth;
+    canvas.height = displayHeight;
+    gl.viewport(0, 0, canvas.width, canvas.height);
+  }
+}
+function checkCanvasResizeLoop() {
+  checkCanvasResize();
+  requestAnimationFrame(checkCanvasResizeLoop);
+}
+checkCanvasResizeLoop();
+
 // Setup render loop
 function renderFrame() {
   exports.RenderLoop.Render();
