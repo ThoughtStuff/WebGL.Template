@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Timers;
+using WebGL.Template.Interop;
 
 namespace WebGL.Template;
 
@@ -37,6 +38,8 @@ public sealed class GameController : IDisposable, IRenderer
         _game.Update(deltaTime);
         // Call FixedUpdate with fixed time interval
         _game.FixedUpdate(_interval);
+        // Update display of FPS
+        Overlay.SetFPS($"{_fpsCounter.Fps:F2} Hz");
     }
 
     public void Render()

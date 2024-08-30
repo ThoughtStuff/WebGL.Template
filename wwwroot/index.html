@@ -33,10 +33,28 @@
         width: 100vw;
         height: 100vh;
       }
+
+      #overlay {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        padding: 10px;
+        background-color: rgba(0, 0, 0, 0.7); /* Semi-opaque background */
+        color: white;
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+        line-height: 0;
+        border-radius: 5px;
+        z-index: 100; /* Ensure it appears above other elements */
+      }
     </style>
   </head>
 
   <body>
     <canvas id="canvas"></canvas>
+    <div id="overlay">
+      <p id="fps">-- Hz</p>
+      <p id="errors"></p>
+    </div>
   </body>
 </html>

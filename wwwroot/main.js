@@ -6,6 +6,10 @@ const gl =
   canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
 console.assert(gl, "WebGL is not available");
 
+// GUI Overlay elements
+const fpsElement = document.getElementById("fps");
+const errorsElement = document.getElementById("errors");
+
 const { setModuleImports, getAssemblyExports, getConfig } = await dotnet
   .withDiagnosticTracing(false)
   .withApplicationArgumentsFromQuery()
@@ -20,6 +24,14 @@ setModuleImports("main.js", {
       //       calling slice() is safer, but makes a copy
       //       https://github.com/dotnet/runtime/blob/8cb3bf89e4b28b66bf3b4e2957fd015bf925a787/src/mono/wasm/runtime/marshal.ts#L386C5-L386C24
       gl.bufferData(target, memoryView._unsafe_create_view(), usage);
+    },
+  },
+  overlay: {
+    setFPS: (fps) => {
+      fpsElement.textContent = fps;
+    },
+    setErrorMessage: (message) => {
+      errorsElement.textContent = message;
     },
   },
 });
