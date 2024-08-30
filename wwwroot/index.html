@@ -11,9 +11,23 @@
       body {
         margin: 0;
         padding: 0;
+        overflow: hidden; /* Prevent scrolling */
+        touch-action: none; /* Prevent touch-based zooming */
+        width: 100%;
         height: 100%;
-        overflow: hidden;
       }
+
+      body,
+      div,
+      canvas,
+      p,
+      button {
+        -webkit-user-select: none; /* Disable text selection in Safari */
+        -moz-user-select: none; /* Disable text selection in Firefox */
+        -ms-user-select: none; /* Disable text selection in IE/Edge */
+        user-select: none; /* Disable text selection in modern browsers */
+      }
+
       canvas {
         display: block;
         width: 100vw;

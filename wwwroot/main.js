@@ -50,6 +50,9 @@ const keyUp = (e) => {
 };
 
 const mouseMove = (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+
   // Normalize mouse position to be in the range [0, 1]
   // with the origin at the bottom left
   const x = e.offsetX / canvas.clientWidth;
@@ -59,6 +62,8 @@ const mouseMove = (e) => {
 };
 
 const mouseDown = (e) => {
+  e.preventDefault();
+  e.stopPropagation();
   const shift = e.shiftKey;
   const ctrl = e.ctrlKey;
   const alt = e.altKey;
@@ -68,6 +73,8 @@ const mouseDown = (e) => {
 };
 
 const mouseUp = (e) => {
+  e.preventDefault();
+  e.stopPropagation();
   const shift = e.shiftKey;
   const ctrl = e.ctrlKey;
   const alt = e.altKey;
