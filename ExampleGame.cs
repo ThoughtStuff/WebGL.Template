@@ -8,6 +8,7 @@ public class ExampleGame : IGame
     private Vector2? _mousePosition;
     private JSObject? _positionBuffer;
 
+    /// <inheritdoc/>
     public void Initialize(IShaderLoader shaderLoader)
     {
         // Load the shader program
@@ -52,12 +53,13 @@ public class ExampleGame : IGame
         GL.Clear(GL.COLOR_BUFFER_BIT);
     }
 
+    /// <inheritdoc/>
     public void Update(TimeSpan deltaTime)
     {
         if (_positionBuffer is null || _mousePosition is null)
             return;
-        GL.BindBuffer(GL.ARRAY_BUFFER, _positionBuffer);
-        // Transform [0, 1] to Normalized Device Coordinates (NDC) [-1, 1]
+        // Transform [0, 1] mouse position to 
+        // Normalized Device Coordinates (NDC) [-1, 1]
         // To match WebGL's default coordinates
         var x = _mousePosition.Value.X * 2 - 1;
         var y = _mousePosition.Value.Y * 2 - 1;
@@ -67,26 +69,32 @@ public class ExampleGame : IGame
             -1.0f, -1.0f,
             1.0f, -1.0f
         ];
+        GL.BindBuffer(GL.ARRAY_BUFFER, _positionBuffer);
         GL.BufferData(GL.ARRAY_BUFFER, positions, GL.STATIC_DRAW);
     }
 
+    /// <inheritdoc/>
     public void FixedUpdate(TimeSpan deltaTime)
     {
     }
 
+    /// <inheritdoc/>
     public void OnKeyPress(string key, bool pressed)
     {
     }
 
+    /// <inheritdoc/>
     public void OnMouseClick(int button, bool pressed)
     {
     }
 
+    /// <inheritdoc/>
     public void OnMouseMove(float x, float y)
     {
         _mousePosition = new Vector2(x, y);
     }
 
+    /// <inheritdoc/>
     public void Render()
     {
         GL.Clear(GL.COLOR_BUFFER_BIT);
