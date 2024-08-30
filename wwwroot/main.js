@@ -27,7 +27,7 @@ setModuleImports("main.js", {
 const config = getConfig();
 const exports = await getAssemblyExports(config.mainAssemblyName);
 
-// Setup input interop
+// Setup input interop for keyboard
 const keyDown = (e) => {
   e.stopPropagation();
   const shift = e.shiftKey;
@@ -49,38 +49,71 @@ const keyUp = (e) => {
   exports.InputInterop.OnKeyUp(code, shift, ctrl, alt);
 };
 
+/** Convert client pixel coordinates to normalized coordinates
+ * with the origin at bottom left corner of the canvas
+ */
+function normalize(clientX, clientY) {
+  return {
+    x: clientX / canvas.clientWidth,
+    y: 1 - clientY / canvas.clientHeight,
+  };
+}
+
 const mouseMove = (e) => {
   e.preventDefault();
   e.stopPropagation();
-
-  // Normalize mouse position to be in the range [0, 1]
-  // with the origin at the bottom left
-  const x = e.offsetX / canvas.clientWidth;
-  const y = 1 - e.offsetY / canvas.clientHeight;
-
+  const { x, y } = normalize(e.clientX, e.clientY);
   exports.InputInterop.OnMouseMove(x, y);
 };
 
 const mouseDown = (e) => {
   e.preventDefault();
   e.stopPropagation();
+  const { x, y } = normalize(e.clientX, e.clientY);
   const shift = e.shiftKey;
   const ctrl = e.ctrlKey;
   const alt = e.altKey;
   const button = e.button;
 
-  exports.InputInterop.OnMouseDown(shift, ctrl, alt, button);
+  exports.InputInterop.OnMouseDown(shift, ctrl, alt, button, x, y);
 };
 
 const mouseUp = (e) => {
   e.preventDefault();
   e.stopPropagation();
+  const { x, y } = normalize(e.clientX, e.clientY);
   const shift = e.shiftKey;
   const ctrl = e.ctrlKey;
   const alt = e.altKey;
   const button = e.button;
 
-  exports.InputInterop.OnMouseUp(shift, ctrl, alt, button);
+  exports.InputInterop.OnMouseUp(shift, ctrl, alt, button, x, y);
+};
+
+const touchStart = (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+
+  const touch = e.touches[0];
+  const { x, y } = normalize(touch.clientX, touch.clientY);
+  exports.InputInterop.OnTouchStart(x, y);
+};
+
+const touchMove = (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+
+  const touch = e.touches[0];
+  const { x, y } = normalize(touch.clientX, touch.clientY);
+
+  exports.InputInterop.OnTouchMove(x, y);
+};
+
+const touchEnd = (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+
+  exports.InputInterop.OnTouchEnd();
 };
 
 canvas.addEventListener("keydown", keyDown, false);
@@ -88,6 +121,9 @@ canvas.addEventListener("keyup", keyUp, false);
 canvas.addEventListener("mousemove", mouseMove, false);
 canvas.addEventListener("mousedown", mouseDown, false);
 canvas.addEventListener("mouseup", mouseUp, false);
+canvas.addEventListener("touchstart", touchStart, false);
+canvas.addEventListener("touchmove", touchMove, false);
+canvas.addEventListener("touchend", touchEnd, false);
 canvas.tabIndex = 1000;
 
 // Auto-resize canvas so framebuffer is always the same size as the canvas
@@ -105,7 +141,7 @@ function resizeCanvasToDisplaySize() {
     gl.viewport(0, 0, canvas.width, canvas.height);
   }
 }
-window.addEventListener('resize', resizeCanvasToDisplaySize);
+window.addEventListener("resize", resizeCanvasToDisplaySize);
 resizeCanvasToDisplaySize();
 
 // Setup render loop

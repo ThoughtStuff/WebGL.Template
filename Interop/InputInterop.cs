@@ -24,14 +24,32 @@ public static partial class InputInterop
     }
 
     [JSExport]
-    public static void OnMouseDown(bool shift, bool ctrl, bool alt, int button)
+    public static void OnMouseDown(bool shift, bool ctrl, bool alt, int button, float x, float y)
     {
-        GameSingleton.Instance?.OnMouseClick(button, true);
+        GameSingleton.Instance?.OnMouseClick(button, true, x, y);
     }
 
     [JSExport]
-    public static void OnMouseUp(bool shift, bool ctrl, bool alt, int button)
+    public static void OnMouseUp(bool shift, bool ctrl, bool alt, int button, float x, float y)
     {
-        GameSingleton.Instance?.OnMouseClick(button, false);
+        GameSingleton.Instance?.OnMouseClick(button, false, x, y);
+    }
+
+    [JSExport]
+    public static void OnTouchStart(float x, float y)
+    {
+        GameSingleton.Instance?.OnTouchStart(x, y);
+    }
+
+    [JSExport]
+    public static void OnTouchMove(float x, float y)
+    {
+        GameSingleton.Instance?.OnTouchMove(x, y);
+    }
+
+    [JSExport]
+    public static void OnTouchEnd()
+    {
+        GameSingleton.Instance?.OnTouchEnd();
     }
 }

@@ -84,7 +84,7 @@ public class ExampleGame : IGame
     }
 
     /// <inheritdoc/>
-    public void OnMouseClick(int button, bool pressed)
+    public void OnMouseClick(int button, bool pressed, float x, float y)
     {
     }
 
@@ -92,6 +92,23 @@ public class ExampleGame : IGame
     public void OnMouseMove(float x, float y)
     {
         _mousePosition = new Vector2(x, y);
+    }
+
+    /// <inheritdoc/>
+    public void OnTouchStart(float x, float y)
+    {
+        _mousePosition = new Vector2(x, y);
+    }
+
+    /// <inheritdoc/>
+    public void OnTouchMove(float x, float y)
+    {
+        _mousePosition = new Vector2(x, y);
+    }
+
+    /// <inheritdoc/>
+    public void OnTouchEnd()
+    {
     }
 
     /// <inheritdoc/>
