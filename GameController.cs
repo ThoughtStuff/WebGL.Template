@@ -3,7 +3,7 @@ using System.Timers;
 
 namespace WebGL.Template;
 
-public sealed class GameController : IDisposable
+public sealed class GameController : IDisposable, IRenderer
 {
     private readonly TimeSpan _interval = TimeSpan.FromSeconds(1.0 / 60.0);
     private readonly System.Timers.Timer _timer;
@@ -20,7 +20,8 @@ public sealed class GameController : IDisposable
     public void Start()
     {
         _game.Initialize(new ShaderLoader());
-        GameSingleton.Instance = _game;
+        Singletons.GameInstance = _game;
+        Singletons.RendererInstance = this;
         _timer.Start();
         _stopwatch.Start();
     }
@@ -33,6 +34,20 @@ public sealed class GameController : IDisposable
         _game.Update(deltaTime);
         // Call FixedUpdate with fixed time interval
         _game.FixedUpdate(_interval);
+    }
+
+    public void Render()
+    {
+        // Wrap the Game's Render method to catch & report exceptions 
+        // so that the render loop is not killed
+        try
+        {
+            _game.Render();
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine(ex);
+        }
     }
 
     public void Dispose()

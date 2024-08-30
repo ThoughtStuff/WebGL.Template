@@ -1,6 +1,6 @@
 namespace WebGL.Template;
 
-public interface IGame
+public interface IGame : IRenderer
 {
     /// <summary>
     /// Creates initial resources for the game scene.
@@ -71,9 +71,4 @@ public interface IGame
     /// </summary>
     /// <param name="deltaTime">The fixed time interval for the update.</param>
     void FixedUpdate(TimeSpan deltaTime);
-
-    /// <summary>
-    /// Renders the current game scene.
-    /// </summary>
-    void Render();
 }
