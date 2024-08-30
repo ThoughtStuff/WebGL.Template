@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Shaders\fragment.glsl" />
-    <EmbeddedResource Include="Shaders\vertex.glsl" />
+    <!-- Embed any shader files as Resources so they can be loaded at runtime -->
+    <EmbeddedResource Include="Shaders\**\*.glsl" />
   </ItemGroup>
 </Project>
