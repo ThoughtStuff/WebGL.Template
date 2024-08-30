@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebGL.Template", "WebGL.Template.csproj", "{EEF3C050-4214-467F-B0A6-096255886BBB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThoughtStuff.WebGLTemplate", "ThoughtStuff.WebGLTemplate.csproj", "{48D18395-1184-42FB-AB41-3238150C2D1A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebGL.Template", "WebGL.Template.csproj", "{3A345E08-1857-4079-8E7B-6BE430FB2F8F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{EEF3C050-4214-467F-B0A6-096255886BBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EEF3C050-4214-467F-B0A6-096255886BBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EEF3C050-4214-467F-B0A6-096255886BBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EEF3C050-4214-467F-B0A6-096255886BBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48D18395-1184-42FB-AB41-3238150C2D1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48D18395-1184-42FB-AB41-3238150C2D1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48D18395-1184-42FB-AB41-3238150C2D1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48D18395-1184-42FB-AB41-3238150C2D1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A345E08-1857-4079-8E7B-6BE430FB2F8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A345E08-1857-4079-8E7B-6BE430FB2F8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A345E08-1857-4079-8E7B-6BE430FB2F8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A345E08-1857-4079-8E7B-6BE430FB2F8F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
