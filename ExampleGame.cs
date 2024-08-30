@@ -1,7 +1,13 @@
+using System.Numerics;
+using System.Runtime.InteropServices.JavaScript;
+
 namespace WebGL.Template;
 
 public class ExampleGame : IGame
 {
+    private Vector2? _mousePosition;
+    private JSObject? _positionBuffer;
+
     public void Initialize(IShaderLoader shaderLoader)
     {
         // Load the shader program
@@ -9,8 +15,8 @@ public class ExampleGame : IGame
 
         // POSITIONS
         // Create a buffer for the triangle's vertex positions.
-        var positionBuffer = GL.CreateBuffer();
-        GL.BindBuffer(GL.ARRAY_BUFFER, positionBuffer);
+        _positionBuffer = GL.CreateBuffer();
+        GL.BindBuffer(GL.ARRAY_BUFFER, _positionBuffer);
         // Define the vertex positions for the triangle.
         Span<float> positions =
         [
@@ -48,6 +54,20 @@ public class ExampleGame : IGame
 
     public void Update(TimeSpan deltaTime)
     {
+        if (_positionBuffer is null || _mousePosition is null)
+            return;
+        GL.BindBuffer(GL.ARRAY_BUFFER, _positionBuffer);
+        // Transform [0, 1] to Normalized Device Coordinates (NDC) [-1, 1]
+        // To match WebGL's default coordinates
+        var x = _mousePosition.Value.X * 2 - 1;
+        var y = _mousePosition.Value.Y * 2 - 1;
+        Span<float> positions =
+        [
+            x, y,
+            -1.0f, -1.0f,
+            1.0f, -1.0f
+        ];
+        GL.BufferData(GL.ARRAY_BUFFER, positions, GL.STATIC_DRAW);
     }
 
     public void FixedUpdate(TimeSpan deltaTime)
@@ -64,6 +84,7 @@ public class ExampleGame : IGame
 
     public void OnMouseMove(float x, float y)
     {
+        _mousePosition = new Vector2(x, y);
     }
 
     public void Render()

@@ -23,6 +23,8 @@ public interface IGame
 
     /// <summary>
     /// Handles mouse move events.
+    /// Coordinates are normalized to the range [0, 1] 
+    /// with the origin in the bottom-left.
     /// </summary>
     /// <param name="x">The normalized x-coordinate of the mouse pointer.</param>
     /// <param name="y">The normalized y-coordinate of the mouse pointer.</param>

@@ -50,8 +50,10 @@ const keyUp = (e) => {
 };
 
 const mouseMove = (e) => {
-  const x = e.offsetX;
-  const y = e.offsetY;
+  // Normalize mouse position to be in the range [0, 1]
+  // with the origin at the bottom left
+  const x = e.offsetX / canvas.clientWidth;
+  const y = 1 - e.offsetY / canvas.clientHeight;
 
   exports.InputInterop.OnMouseMove(x, y);
 };
