@@ -9,6 +9,7 @@ public sealed class GameController : IDisposable, IRenderer
     private readonly System.Timers.Timer _timer;
     private readonly Stopwatch _stopwatch = new();
     private readonly IGame _game;
+    private string _lastRenderError = string.Empty;
 
     public GameController(IGame game)
     {
@@ -46,7 +47,11 @@ public sealed class GameController : IDisposable, IRenderer
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine(ex);
+            if (_lastRenderError != ex.Message)
+            {
+                _lastRenderError = ex.Message;
+                Console.Error.WriteLine(ex);
+            }
         }
     }
 
