@@ -1,6 +1,7 @@
 using System.Runtime.InteropServices.JavaScript;
+using WebGL.Template;
 
-namespace WebGL.Template.Interop;
+// Global namespace to make JS consumption easy
 
 static partial class Overlay
 {
@@ -9,4 +10,10 @@ static partial class Overlay
 
     [JSImport("overlay.setErrorMessage", "main.js")]
     public static partial void SetErrorMessage(string message);
+
+    [JSExport]
+    public static void ClearErrorMessage()
+    {
+        Singletons.OverlayHandlerInstance?.ClearErrorMessage();
+    }
 }

@@ -1,10 +1,9 @@
 using System.Diagnostics;
 using System.Timers;
-using WebGL.Template.Interop;
 
 namespace WebGL.Template;
 
-public sealed class GameController : IDisposable, IRenderer
+public sealed class GameController : IDisposable, IRenderer, IOverlayHandler
 {
     private readonly TimeSpan _interval = TimeSpan.FromSeconds(1.0 / 60.0);
     private readonly System.Timers.Timer _timer;
@@ -25,6 +24,7 @@ public sealed class GameController : IDisposable, IRenderer
         _game.Initialize(new ShaderLoader());
         Singletons.GameInstance = _game;
         Singletons.RendererInstance = this;
+        Singletons.OverlayHandlerInstance = this;
         _timer.Start();
         _stopwatch.Start();
         _fpsCounter.Start();
@@ -36,19 +36,18 @@ public sealed class GameController : IDisposable, IRenderer
         var deltaTime = _stopwatch.Elapsed;
         _stopwatch.Restart();
         _game.Update(deltaTime);
+
         // Call FixedUpdate with fixed time interval
         _game.FixedUpdate(_interval);
-        // Update display of FPS
+
+        // Update Overlay GUI
         Overlay.SetFPS($"{_fpsCounter.Fps:F2} Hz");
-        if (!string.IsNullOrEmpty(_lastRenderError))
-        {
-            Overlay.SetErrorMessage(_lastRenderError);
-        }
+        Overlay.SetErrorMessage(_lastRenderError);
     }
 
     public void Render()
     {
-        // Wrap the Game's Render method to catch & report exceptions 
+        // Wrap the Game's Render method to catch & report exceptions
         // so that the render loop is not killed
         try
         {
@@ -63,6 +62,11 @@ public sealed class GameController : IDisposable, IRenderer
                 Console.Error.WriteLine(ex);
             }
         }
+    }
+
+    public void ClearErrorMessage()
+    {
+        _lastRenderError = string.Empty;
     }
 
     public void Dispose()

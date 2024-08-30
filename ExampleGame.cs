@@ -7,6 +7,7 @@ public class ExampleGame : IGame
 {
     private Vector2? _mousePosition;
     private JSObject? _positionBuffer;
+    private bool _throwError;
 
     /// <inheritdoc/>
     public void Initialize(IShaderLoader shaderLoader)
@@ -86,6 +87,7 @@ public class ExampleGame : IGame
     /// <inheritdoc/>
     public void OnMouseClick(int button, bool pressed, float x, float y)
     {
+        _throwError = true;
     }
 
     /// <inheritdoc/>
@@ -116,5 +118,10 @@ public class ExampleGame : IGame
     {
         GL.Clear(GL.COLOR_BUFFER_BIT);
         GL.DrawArrays(GL.TRIANGLES, 0, 3);
+        if (_throwError)
+        {
+            _throwError = false;
+            throw new Exception("This is a test exception!");
+        }
     }
 }

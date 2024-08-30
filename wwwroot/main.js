@@ -44,6 +44,11 @@ setModuleImports("main.js", {
 const config = getConfig();
 const exports = await getAssemblyExports(config.mainAssemblyName);
 
+// Interop events on overlay GUI elements
+errorsElement.addEventListener("click", () => {
+  exports.Overlay.ClearErrorMessage();
+});
+
 // Setup input interop for keyboard
 const keyDown = (e) => {
   e.stopPropagation();
