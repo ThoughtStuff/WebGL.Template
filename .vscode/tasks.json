@@ -2,14 +2,15 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "type": "dotnet",
-      "task": "build",
+      "type": "shell",
+      "label": "dotnet: build",
+      "command": "dotnet",
+      "args": ["build", "WebGL.Template.csproj"],
       "group": {
         "kind": "build",
         "isDefault": true
       },
-      "problemMatcher": ["$msCompile"],
-      "label": "dotnet: build"
+      "problemMatcher": ["$msCompile"]
     },
     {
       "type": "shell",
