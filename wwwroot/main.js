@@ -31,7 +31,12 @@ setModuleImports("main.js", {
       fpsElement.textContent = fps;
     },
     setErrorMessage: (message) => {
-      errorsElement.textContent = message;
+      if (message) {
+        errorsElement.textContent = message;
+        errorsElement.style.display = "block";
+      } else {
+        errorsElement.style.display = "none";
+      }
     },
   },
 });

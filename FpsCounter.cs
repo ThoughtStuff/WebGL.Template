@@ -24,7 +24,7 @@ public sealed class FpsCounter
     {
         if (!_stopwatch.IsRunning)
         {
-            throw new InvalidOperationException("FpsCounter must be started before calling Update.");
+            Start();
         }
 
         _frameCount++;

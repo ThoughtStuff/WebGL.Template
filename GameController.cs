@@ -40,6 +40,10 @@ public sealed class GameController : IDisposable, IRenderer
         _game.FixedUpdate(_interval);
         // Update display of FPS
         Overlay.SetFPS($"{_fpsCounter.Fps:F2} Hz");
+        if (!string.IsNullOrEmpty(_lastRenderError))
+        {
+            Overlay.SetErrorMessage(_lastRenderError);
+        }
     }
 
     public void Render()
@@ -48,14 +52,14 @@ public sealed class GameController : IDisposable, IRenderer
         // so that the render loop is not killed
         try
         {
-            _game.Render();
             _fpsCounter.Update();
+            _game.Render();
         }
         catch (Exception ex)
         {
-            if (_lastRenderError != ex.Message)
+            if (_lastRenderError != ex.ToString())
             {
-                _lastRenderError = ex.Message;
+                _lastRenderError = ex.ToString();
                 Console.Error.WriteLine(ex);
             }
         }
