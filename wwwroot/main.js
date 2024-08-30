@@ -8,7 +8,9 @@ console.assert(gl, "WebGL is not available");
 
 // GUI Overlay elements
 const fpsElement = document.getElementById("fps");
-const errorsElement = document.getElementById("errors");
+const errorsContainer = document.getElementById("errors");
+const errorMessageElement = document.getElementById("errorMessage");
+const clearErrorsElement = document.getElementById("clearErrors");
 
 const { setModuleImports, getAssemblyExports, getConfig } = await dotnet
   .withDiagnosticTracing(false)
@@ -32,10 +34,10 @@ setModuleImports("main.js", {
     },
     setErrorMessage: (message) => {
       if (message) {
-        errorsElement.textContent = message;
-        errorsElement.style.display = "block";
+        errorMessageElement.textContent = message;
+        errorsContainer.style.display = "block";
       } else {
-        errorsElement.style.display = "none";
+        errorsContainer.style.display = "none";
       }
     },
   },
@@ -45,7 +47,7 @@ const config = getConfig();
 const exports = await getAssemblyExports(config.mainAssemblyName);
 
 // Interop events on overlay GUI elements
-errorsElement.addEventListener("click", () => {
+clearErrorsElement.addEventListener("click", () => {
   exports.Overlay.ClearErrorMessage();
 });
 
