@@ -9,6 +9,7 @@ public sealed class GameController : IDisposable, IRenderer
     private readonly System.Timers.Timer _timer;
     private readonly Stopwatch _stopwatch = new();
     private readonly IGame _game;
+    private readonly FpsCounter _fpsCounter = new();
     private string _lastRenderError = string.Empty;
 
     public GameController(IGame game)
@@ -25,6 +26,7 @@ public sealed class GameController : IDisposable, IRenderer
         Singletons.RendererInstance = this;
         _timer.Start();
         _stopwatch.Start();
+        _fpsCounter.Start();
     }
 
     private void Tick(object? sender, ElapsedEventArgs e)
@@ -44,6 +46,7 @@ public sealed class GameController : IDisposable, IRenderer
         try
         {
             _game.Render();
+            _fpsCounter.Update();
         }
         catch (Exception ex)
         {
