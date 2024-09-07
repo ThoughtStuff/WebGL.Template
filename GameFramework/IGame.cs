@@ -26,6 +26,21 @@ public interface IGame : IRenderer
     Task LoadAssetsExtendedAsync();
 
     /// <summary>
+    /// Updates the game scene based on the elapsed wall-clock time.
+    /// </summary>
+    /// <param name="deltaTime">The wall-clock time elapsed since the last update.</param>
+    void Update(TimeSpan deltaTime);
+
+    /// <summary>
+    /// Updates the game scene at a fixed time interval.
+    /// Typically used for physics updates.
+    /// </summary>
+    /// <param name="deltaTime">The fixed time interval for the update.</param>
+    void FixedUpdate(TimeSpan deltaTime);
+
+    #region User Input Handling
+
+    /// <summary>
     /// Handles keyboard events such as key presses and releases.
     /// </summary>
     /// <param name="key">The name of the key that was pressed or released e.g. "ArrowUp".</param>
@@ -67,16 +82,5 @@ public interface IGame : IRenderer
     /// </summary>
     void OnTouchEnd(IEnumerable<Vector2> touches);
 
-    /// <summary>
-    /// Updates the game scene based on the elapsed wall-clock time.
-    /// </summary>
-    /// <param name="deltaTime">The wall-clock time elapsed since the last update.</param>
-    void Update(TimeSpan deltaTime);
-
-    /// <summary>
-    /// Updates the game scene at a fixed time interval.
-    /// Typically used for physics updates.
-    /// </summary>
-    /// <param name="deltaTime">The fixed time interval for the update.</param>
-    void FixedUpdate(TimeSpan deltaTime);
+    #endregion
 }
