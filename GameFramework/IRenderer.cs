@@ -1,4 +1,4 @@
-namespace WebGL.Template;
+namespace WebGL.Template.GameFramework;
 
 public interface IRenderer
 {

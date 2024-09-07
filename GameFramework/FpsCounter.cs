@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace WebGL.Template;
+namespace WebGL.Template.GameFramework;
 
 public sealed class FpsCounter
 {

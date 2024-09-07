@@ -1,5 +1,5 @@
 using System.Runtime.InteropServices.JavaScript;
-using WebGL.Template;
+using WebGL.Template.GameFramework;
 
 // Global namespace to make JS consumption easy
 

@@ -1,4 +1,5 @@
 using WebGL.Template;
+using WebGL.Template.GameFramework;
 
 // Print information about the GL context to demonstrate that WebGL is working
 var version = GL.GetParameterString(GL.VERSION);

@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices.JavaScript;
 
-namespace WebGL.Template;
+namespace WebGL.Template.GameFramework;
 
 class ShaderLoader : IShaderLoader
 {

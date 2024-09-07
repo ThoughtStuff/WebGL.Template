@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Timers;
 
-namespace WebGL.Template;
+namespace WebGL.Template.GameFramework;
 
 public sealed class GameController : IDisposable, IRenderer, IOverlayHandler
 {

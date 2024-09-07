@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices.JavaScript;
+using WebGL.Template.GameFramework;
 
 namespace WebGL.Template;
 
