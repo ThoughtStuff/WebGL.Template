@@ -13,7 +13,7 @@ Console.WriteLine("GLSL Version: " + glslVersion);
 // Bootstrap our Game which handles input, updates, and rendering
 var game = new ExampleGame();
 using var gameController = new GameController(game);
-gameController.Start();
+await gameController.Start();
 
 // Prevent the main method from exiting so that the game loop (Timer) can continue
 while (true)

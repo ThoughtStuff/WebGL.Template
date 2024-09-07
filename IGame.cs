@@ -3,9 +3,27 @@ namespace WebGL.Template;
 public interface IGame : IRenderer
 {
     /// <summary>
+    /// Optional text to display in the FPS overlay.
+    /// </summary>
+    string? OverlayText { get; }
+
+    /// <summary>
+    /// Loads essential assets such as textures and sounds asynchronously.
+    /// Called before InitializeScene.
+    /// Use for loading smaller lower-fidelity assets for first render.
+    /// </summary>
+    Task LoadAssetsEssentialAsync(IShaderLoader shaderLoader);
+
+    /// <summary>
     /// Creates initial resources for the game scene.
     /// </summary>
-    void Initialize(IShaderLoader shaderLoader);
+    void InitializeScene(IShaderLoader shaderLoader);
+
+    /// <summary>
+    /// Called after first Update and Render.
+    /// Use for loading larger higher-fidelity assets.
+    /// </summary>
+    Task LoadAssetsExtendedAsync();
 
     /// <summary>
     /// Handles keyboard events such as key presses and releases.
@@ -36,28 +54,18 @@ public interface IGame : IRenderer
     /// Handles touch start event.
     /// Coordinates are normalized to the range [0, 1]
     /// </summary>
-    /// <param name="x">The normalized x-coordinate of the touch.</param>
-    /// <param name="y">The normalized y-coordinate of the touch.</param>
-    /// <remarks>
-    /// Limited to the first touch
-    /// </remarks>
-    void OnTouchStart(float x, float y);
+    void OnTouchStart(IEnumerable<Vector2> touches);
 
     /// <summary>
     /// Handles touch move event.
     /// Coordinates are normalized to the range [0, 1]
     /// </summary>
-    /// <param name="x">The normalized x-coordinate of the touch.</param>
-    /// <param name="y">The normalized y-coordinate of the touch.</param>
-    /// <remarks>
-    /// Limited to the first touch
-    /// </remarks>
-    void OnTouchMove(float x, float y);
+    void OnTouchMove(IEnumerable<Vector2> touches);
 
     /// <summary>
     /// Handles touch end event.
     /// </summary>
-    void OnTouchEnd();
+    void OnTouchEnd(IEnumerable<Vector2> touches);
 
     /// <summary>
     /// Updates the game scene based on the elapsed wall-clock time.

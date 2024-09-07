@@ -36,20 +36,30 @@ public static partial class InputInterop
     }
 
     [JSExport]
-    public static void OnTouchStart(float x, float y)
+    public static void OnTouchStart(JSObject[] touches)
     {
-        Singletons.GameInstance?.OnTouchStart(x, y);
+        var vectors = ToVector2s(touches);
+        Singletons.GameInstance?.OnTouchStart(vectors);
     }
 
     [JSExport]
-    public static void OnTouchMove(float x, float y)
+    public static void OnTouchMove(JSObject[] touches)
     {
-        Singletons.GameInstance?.OnTouchMove(x, y);
+        var vectors = ToVector2s(touches);
+        Singletons.GameInstance?.OnTouchMove(vectors);
     }
 
     [JSExport]
-    public static void OnTouchEnd()
+    public static void OnTouchEnd(JSObject[] touches)
     {
-        Singletons.GameInstance?.OnTouchEnd();
+        var vectors = ToVector2s(touches);
+        Singletons.GameInstance?.OnTouchEnd(vectors);
+    }
+
+    private static IEnumerable<Vector2> ToVector2s(JSObject[] touches)
+    {
+        return touches.Select(touch =>
+            new Vector2((float)touch.GetPropertyAsDouble("x"),
+                        (float)touch.GetPropertyAsDouble("y")));
     }
 }

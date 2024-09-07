@@ -44,8 +44,9 @@ class ShaderLoader : IShaderLoader
 
         if (!GL.GetShaderParameterBool(shader, GL.COMPILE_STATUS))
         {
+            var errorLog = GL.GetShaderInfoLog(shader);
             GL.DeleteShader(shader);
-            throw new Exception("An error occurred compiling the shaders.");
+            throw new Exception($"Shader compilation failed: {errorLog}");
         }
 
         return shader;

@@ -1,4 +1,3 @@
-using System.Numerics;
 using System.Runtime.InteropServices.JavaScript;
 
 namespace WebGL.Template;
@@ -8,8 +7,17 @@ public class ExampleGame : IGame
     private Vector2? _mousePosition;
     private JSObject? _positionBuffer;
 
+    public string? OverlayText => null;
+
     /// <inheritdoc/>
-    public void Initialize(IShaderLoader shaderLoader)
+    public Task LoadAssetsEssentialAsync(IShaderLoader shaderLoader)
+    {
+        // Load low-res textures here for the initial render
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc/>
+    public void InitializeScene(IShaderLoader shaderLoader)
     {
         // Load the shader program
         var shaderProgram = shaderLoader.LoadShaderProgram("vertex", "fragment");
@@ -54,6 +62,13 @@ public class ExampleGame : IGame
     }
 
     /// <inheritdoc/>
+    public Task LoadAssetsExtendedAsync()
+    {
+        // Load high-res textures here for full fidelity
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc/>
     public void Update(TimeSpan deltaTime)
     {
         if (_positionBuffer is null || _mousePosition is null)
@@ -95,21 +110,16 @@ public class ExampleGame : IGame
     }
 
     /// <inheritdoc/>
-    public void OnTouchStart(float x, float y)
+    public void OnTouchStart(IEnumerable<Vector2> touches)
     {
-        _mousePosition = new Vector2(x, y);
+        _mousePosition = touches.FirstOrDefault();
     }
 
     /// <inheritdoc/>
-    public void OnTouchMove(float x, float y)
-    {
-        _mousePosition = new Vector2(x, y);
-    }
+    public void OnTouchMove(IEnumerable<Vector2> touches) => OnTouchStart(touches);
 
     /// <inheritdoc/>
-    public void OnTouchEnd()
-    {
-    }
+    public void OnTouchEnd(IEnumerable<Vector2> touches) => OnTouchStart(touches);
 
     /// <inheritdoc/>
     public void Render()

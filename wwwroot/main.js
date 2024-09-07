@@ -17,8 +17,23 @@ const { setModuleImports, getAssemblyExports, getConfig } = await dotnet
   .withApplicationArgumentsFromQuery()
   .create();
 
+async function loadImageFromUrl(url) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.crossOrigin = "anonymous"; // Needed if you're loading from a different origin
+    image.onload = () => {
+      resolve(image);
+    };
+    image.onerror = (err) => {
+      reject(new Error(`Failed to load image at ${url}: ${err.message}`));
+    };
+    image.src = url;
+  });
+}
+
 setModuleImports("main.js", {
   gl: gl,
+  ext: gl.getExtension("ANGLE_instanced_arrays"),
   utility: {
     // Permit passing a MemoryView for the data buffer which gives flexibility for marshalling
     glBufferData: (target, memoryView, usage) => {
@@ -26,6 +41,17 @@ setModuleImports("main.js", {
       //       calling slice() is safer, but makes a copy
       //       https://github.com/dotnet/runtime/blob/8cb3bf89e4b28b66bf3b4e2957fd015bf925a787/src/mono/wasm/runtime/marshal.ts#L386C5-L386C24
       gl.bufferData(target, memoryView._unsafe_create_view(), usage);
+    },
+    loadImageFromUrl: loadImageFromUrl,
+    bytesToFloat32Array: (memoryView) => {
+      // console.assert(memoryView instanceof MemoryView && memoryView._viewType === MemoryViewType.Byte)
+      console.assert(
+        memoryView.constructor.name === "Span" && memoryView._viewType == 0,
+        "Argument to bytesToFloat32Array must be a Span<byte> marshaled as MemoryView"
+      );
+      const uint8Array = memoryView.slice();
+      console.assert(uint8Array instanceof Uint8Array);
+      return new Float32Array(uint8Array.buffer);
     },
   },
   overlay: {
@@ -114,30 +140,34 @@ const mouseUp = (e) => {
   exports.InputInterop.OnMouseUp(shift, ctrl, alt, button, x, y);
 };
 
+function normalizeTouches(e) {
+  const touchesArray = Array.from(e.touches);
+  const points = touchesArray.map((t) => normalize(t.clientX, t.clientY));
+  return points;
+}
+
 const touchStart = (e) => {
   e.preventDefault();
   e.stopPropagation();
 
-  const touch = e.touches[0];
-  const { x, y } = normalize(touch.clientX, touch.clientY);
-  exports.InputInterop.OnTouchStart(x, y);
+  const touches = normalizeTouches(e);
+  exports.InputInterop.OnTouchStart(touches);
 };
 
 const touchMove = (e) => {
   e.preventDefault();
   e.stopPropagation();
 
-  const touch = e.touches[0];
-  const { x, y } = normalize(touch.clientX, touch.clientY);
-
-  exports.InputInterop.OnTouchMove(x, y);
+  const touches = normalizeTouches(e);
+  exports.InputInterop.OnTouchMove(touches);
 };
 
 const touchEnd = (e) => {
   e.preventDefault();
   e.stopPropagation();
 
-  exports.InputInterop.OnTouchEnd();
+  const touches = normalizeTouches(e);
+  exports.InputInterop.OnTouchEnd(touches);
 };
 
 canvas.addEventListener("keydown", keyDown, false);
