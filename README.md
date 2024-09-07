@@ -11,6 +11,7 @@ This template is a starting point for creating .NET projects that target WebAsse
 This includes a very basic `GameFramework` to help you get started.
 You only need to implement `IGame` and pass your Game instance to the `GameController` in `Program.cs`.
 See [`ExampleGame.cs`](./ExampleGame.cs) for a simple example.
+See the [Examples](./Examples) folder for more examples.
 
 That said, you are not required to use the `GameFramework`. You can delete the `GameFramework` folder and implement your own rendering and update logic.
 
