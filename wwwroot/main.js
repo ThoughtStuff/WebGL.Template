@@ -170,15 +170,14 @@ const touchEnd = (e) => {
   exports.InputInterop.OnTouchEnd(touches);
 };
 
-canvas.addEventListener("keydown", keyDown, false);
-canvas.addEventListener("keyup", keyUp, false);
+document.addEventListener("keydown", keyDown, false);
+document.addEventListener("keyup", keyUp, false);
 canvas.addEventListener("mousemove", mouseMove, false);
 canvas.addEventListener("mousedown", mouseDown, false);
 canvas.addEventListener("mouseup", mouseUp, false);
 canvas.addEventListener("touchstart", touchStart, false);
 canvas.addEventListener("touchmove", touchMove, false);
 canvas.addEventListener("touchend", touchEnd, false);
-canvas.tabIndex = 1000;
 
 // Auto-resize canvas so framebuffer is always the same size as the canvas
 function resizeCanvasToDisplaySize() {
