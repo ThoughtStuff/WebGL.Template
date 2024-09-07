@@ -1,6 +1,5 @@
 using System.Runtime.InteropServices.JavaScript;
 using WebGL.Template.GameFramework;
-using WebGL.Template.Interop;
 
 namespace WebGL.Template.Examples;
 
@@ -12,6 +11,7 @@ namespace WebGL.Template.Examples;
 public class HelloTextureMap : IGame
 {
     private JSObject? _shaderProgram;
+    private JSObject? _lowResTextureId;
 
     public string? OverlayText => "Hello, Texture Map";
 
@@ -31,6 +31,8 @@ public class HelloTextureMap : IGame
         GL.BindTexture(GL.TEXTURE_2D, textureId);
         var textureUniformLoc = GL.GetUniformLocation(_shaderProgram, "uTexture");
         GL.Uniform1i(textureUniformLoc, 0);
+
+        _lowResTextureId = textureId;
     }
 
     public void InitializeScene(IShaderLoader shaderLoader)
@@ -92,7 +94,12 @@ public class HelloTextureMap : IGame
         GL.ActiveTexture(GL.TEXTURE0);
         GL.BindTexture(GL.TEXTURE_2D, textureId);
 
-        // TODO: delete the low-res texture
+        // Delete the low-res texture
+        if (_lowResTextureId is not null)
+        {
+            GL.DeleteTexture(_lowResTextureId);
+            _lowResTextureId = null;
+        }
     }
 
     public void Render()
