@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
 using WebGL.Template.Interop;
 
-public static partial class GL
+static partial class GL
 {
     /// <summary>
     /// Call gl.BufferData with the Span of given values which will be marshalled as bytes

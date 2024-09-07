@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices.JavaScript;
 
-public static partial class GL
+static partial class GL
 {
     [JSImport("ext.drawArraysInstancedANGLE", "main.js")]
     internal static partial void DrawArraysInstanced(int mode,

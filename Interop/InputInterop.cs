@@ -3,7 +3,7 @@ using WebGL.Template;
 
 // Global namespace to make JS consumption easy
 
-public static partial class InputInterop
+static partial class InputInterop
 {
     [JSExport]
     public static void OnKeyDown(string keyName, bool shift, bool ctrl, bool alt, bool repeat)

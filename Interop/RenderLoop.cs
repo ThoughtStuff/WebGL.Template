@@ -3,7 +3,7 @@ using WebGL.Template;
 
 // Global namespace to make JS consumption easy
 
-public static partial class RenderLoop
+static partial class RenderLoop
 {
     [JSExport]
     public static void Render()

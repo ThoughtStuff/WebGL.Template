@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices.JavaScript;
 
-public static partial class GL
+static partial class GL
 {
     [JSImport("gl.getContextAttributes", "main.js")]
     internal static partial JSObject GetContextAttributes();

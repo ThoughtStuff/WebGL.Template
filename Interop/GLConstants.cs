@@ -1,6 +1,6 @@
 // Reference: https://registry.khronos.org/webgl/specs/latest/1.0/#5.14
 
-public static partial class GL
+static partial class GL
 {
     // ClearBufferMask
     public const int DEPTH_BUFFER_BIT = 0x00000100;

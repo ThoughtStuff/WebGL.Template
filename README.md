@@ -27,7 +27,7 @@ setModuleImports("main.js", { gl });
 And imported in C# as in this example:
 
 ```cs
-public static partial class GL
+static partial class GL
 {
     [JSImport("gl.clearColor", "main.js")]
     internal static partial void ClearColor(float red, float green, float blue, float alpha);
