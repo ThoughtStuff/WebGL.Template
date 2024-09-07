@@ -52,18 +52,16 @@ public interface IGame : IRenderer
     /// </summary>
     /// <param name="button">The mouse button that was pressed or released.</param>
     /// <param name="pressed">Indicates whether the button was pressed (true) or released (false).</param>
-    /// <param name="x">The normalized x-coordinate of the mouse pointer at the time of the click.</param>
-    /// <param name="y">The normalized y-coordinate of the mouse pointer at the time of the click.</param>
-    void OnMouseClick(int button, bool pressed, float x, float y);
+    /// <param name="position">The normalized x and y coordinates of the mouse pointer.</param>
+    void OnMouseClick(int button, bool pressed, Vector2 position);
 
     /// <summary>
     /// Handles mouse move events.
     /// Coordinates are normalized to the range [0, 1] 
     /// with the origin in the bottom-left.
     /// </summary>
-    /// <param name="x">The normalized x-coordinate of the mouse pointer.</param>
-    /// <param name="y">The normalized y-coordinate of the mouse pointer.</param>
-    void OnMouseMove(float x, float y);
+    /// <param name="position">The normalized x and y coordinates of the mouse pointer.</param>
+    void OnMouseMove(Vector2 position);
 
     /// <summary>
     /// Handles touch start event.

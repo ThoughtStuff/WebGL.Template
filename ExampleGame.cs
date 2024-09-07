@@ -100,14 +100,14 @@ public class ExampleGame : IGame
     }
 
     /// <inheritdoc/>
-    public void OnMouseClick(int button, bool pressed, float x, float y)
+    public void OnMouseClick(int button, bool pressed, Vector2 position)
     {
     }
 
     /// <inheritdoc/>
-    public void OnMouseMove(float x, float y)
+    public void OnMouseMove(Vector2 position)
     {
-        _mousePosition = new Vector2(x, y);
+        _mousePosition = position;
     }
 
     /// <inheritdoc/>

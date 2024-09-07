@@ -20,19 +20,19 @@ static partial class InputInterop
     [JSExport]
     public static void OnMouseMove(float x, float y)
     {
-        Singletons.GameInstance?.OnMouseMove(x, y);
+        Singletons.GameInstance?.OnMouseMove(new Vector2(x, y));
     }
 
     [JSExport]
     public static void OnMouseDown(bool shift, bool ctrl, bool alt, int button, float x, float y)
     {
-        Singletons.GameInstance?.OnMouseClick(button, true, x, y);
+        Singletons.GameInstance?.OnMouseClick(button, true, new Vector2(x, y));
     }
 
     [JSExport]
     public static void OnMouseUp(bool shift, bool ctrl, bool alt, int button, float x, float y)
     {
-        Singletons.GameInstance?.OnMouseClick(button, false, x, y);
+        Singletons.GameInstance?.OnMouseClick(button, false, new Vector2(x, y));
     }
 
     [JSExport]
