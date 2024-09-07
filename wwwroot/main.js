@@ -79,14 +79,16 @@ clearErrorsElement.addEventListener("click", () => {
 
 // Setup input interop for keyboard
 const keyDown = (e) => {
+  // Ignore repeated keydown events
+  if (e.repeat)
+    return;
   e.stopPropagation();
   const shift = e.shiftKey;
   const ctrl = e.ctrlKey;
   const alt = e.altKey;
-  const repeat = e.repeat;
   const code = e.code;
 
-  exports.InputInterop.OnKeyDown(code, shift, ctrl, alt, repeat);
+  exports.InputInterop.OnKeyDown(code, shift, ctrl, alt);
 };
 
 const keyUp = (e) => {
@@ -170,14 +172,14 @@ const touchEnd = (e) => {
   exports.InputInterop.OnTouchEnd(touches);
 };
 
-document.addEventListener("keydown", keyDown, false);
-document.addEventListener("keyup", keyUp, false);
-canvas.addEventListener("mousemove", mouseMove, false);
-canvas.addEventListener("mousedown", mouseDown, false);
-canvas.addEventListener("mouseup", mouseUp, false);
-canvas.addEventListener("touchstart", touchStart, false);
-canvas.addEventListener("touchmove", touchMove, false);
-canvas.addEventListener("touchend", touchEnd, false);
+document.addEventListener("keydown", keyDown);
+document.addEventListener("keyup", keyUp);
+canvas.addEventListener("mousemove", mouseMove);
+canvas.addEventListener("mousedown", mouseDown);
+canvas.addEventListener("mouseup", mouseUp);
+canvas.addEventListener("touchstart", touchStart);
+canvas.addEventListener("touchmove", touchMove);
+canvas.addEventListener("touchend", touchEnd);
 
 // Auto-resize canvas so framebuffer is always the same size as the canvas
 function resizeCanvasToDisplaySize() {

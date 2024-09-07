@@ -6,33 +6,33 @@ using WebGL.Template.GameFramework;
 static partial class InputInterop
 {
     [JSExport]
-    public static void OnKeyDown(string keyName, bool shift, bool ctrl, bool alt, bool repeat)
+    public static void OnKeyDown(string keyName, bool shift, bool ctrl, bool alt)
     {
-        Singletons.GameInstance?.OnKeyPress(keyName, true);
+        Singletons.GameInstance?.OnKeyPress(keyName, pressed: true);
     }
 
     [JSExport]
     public static void OnKeyUp(string keyName, bool shift, bool ctrl, bool alt)
     {
-        Singletons.GameInstance?.OnKeyPress(keyName, false);
+        Singletons.GameInstance?.OnKeyPress(keyName, pressed: false);
     }
 
     [JSExport]
     public static void OnMouseMove(float x, float y)
     {
-        Singletons.GameInstance?.OnMouseMove(new Vector2(x, y));
+        Singletons.GameInstance?.OnMouseMove(new(x, y));
     }
 
     [JSExport]
     public static void OnMouseDown(bool shift, bool ctrl, bool alt, int button, float x, float y)
     {
-        Singletons.GameInstance?.OnMouseClick(button, true, new Vector2(x, y));
+        Singletons.GameInstance?.OnMouseClick(button, true, new(x, y));
     }
 
     [JSExport]
     public static void OnMouseUp(bool shift, bool ctrl, bool alt, int button, float x, float y)
     {
-        Singletons.GameInstance?.OnMouseClick(button, false, new Vector2(x, y));
+        Singletons.GameInstance?.OnMouseClick(button, false, new(x, y));
     }
 
     [JSExport]
