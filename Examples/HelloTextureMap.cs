@@ -15,7 +15,7 @@ public class HelloTextureMap : IGame
 
     public string? OverlayText => "Hello, Texture Map";
 
-    public async Task LoadAssetsEssentialAsync(IShaderLoader shaderLoader)
+    public async Task LoadAssetsEssentialAsync(IShaderLoader shaderLoader, ITextureLoader textureLoader)
     {
         // Load the shader program
         _shaderProgram = shaderLoader.LoadShaderProgram("BasicTextureMap/vertex", "BasicTextureMap/fragment");
@@ -24,7 +24,9 @@ public class HelloTextureMap : IGame
         string texturePath = "/textures/webgl-logo-lowres.png";
 
         // Load and bind texture
-        var textureId = await LoadTexture(texturePath);
+        var textureId = await textureLoader.LoadTexture(texturePath,
+                                                        mipMapping: false,
+                                                        nearestNeighborMagnification: false);
         GL.ActiveTexture(GL.TEXTURE0);
         GL.BindTexture(GL.TEXTURE_2D, textureId);
         var textureUniformLoc = GL.GetUniformLocation(_shaderProgram, "uTexture");
@@ -80,13 +82,13 @@ public class HelloTextureMap : IGame
         GL.ClearColor(0.392f, 0.584f, 0.929f, 1.0f);
     }
 
-    public async Task LoadAssetsExtendedAsync()
+    public async Task LoadAssetsExtendedAsync(IShaderLoader shaderLoader, ITextureLoader textureLoader)
     {
         // Load the high-res texture
         string texturePath = "/textures/webgl-logo.png";
 
         // Load and bind texture
-        var textureId = await LoadTexture(texturePath);
+        var textureId = await textureLoader.LoadTexture(texturePath);
         GL.ActiveTexture(GL.TEXTURE0);
         GL.BindTexture(GL.TEXTURE_2D, textureId);
 
@@ -97,21 +99,6 @@ public class HelloTextureMap : IGame
     {
         GL.Clear(GL.COLOR_BUFFER_BIT);
         GL.DrawArrays(GL.TRIANGLE_STRIP, 0, 4);
-    }
-
-    private static async Task<JSObject> LoadTexture(string url)
-    {
-        // Load image using JS interop
-        var image = await Utility.LoadImageFromUrl(url);
-        var texture = GL.CreateTexture();
-        GL.BindTexture(GL.TEXTURE_2D, texture);
-        GL.TexParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, GL.LINEAR_MIPMAP_LINEAR);
-        GL.TexParameteri(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, GL.LINEAR);
-        GL.TexParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, GL.CLAMP_TO_EDGE);
-        GL.TexParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, GL.CLAMP_TO_EDGE);
-        GL.TexImage2D(GL.TEXTURE_2D, 0, GL.RGBA, GL.RGBA, GL.UNSIGNED_BYTE, image);
-        GL.GenerateMipmap(GL.TEXTURE_2D);
-        return texture;
     }
 
     public void Update(TimeSpan deltaTime) { }

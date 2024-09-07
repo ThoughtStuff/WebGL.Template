@@ -55,8 +55,8 @@ class HelloTriangle : IGame
         GL.DrawArrays(GL.TRIANGLES, 0, 3);
     }
 
-    public Task LoadAssetsEssentialAsync(IShaderLoader shaderLoader) => Task.CompletedTask;
-    public Task LoadAssetsExtendedAsync() => Task.CompletedTask;
+    public Task LoadAssetsEssentialAsync(IShaderLoader shaderLoader, ITextureLoader textureLoader) => Task.CompletedTask;
+    public Task LoadAssetsExtendedAsync(IShaderLoader shaderLoader, ITextureLoader textureLoader) => Task.CompletedTask;
     public void Update(TimeSpan deltaTime) { }
     public void FixedUpdate(TimeSpan deltaTime) { }
     public void OnKeyPress(string key, bool pressed) { }

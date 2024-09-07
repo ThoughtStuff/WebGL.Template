@@ -22,7 +22,8 @@ public sealed class GameController : IDisposable, IRenderer, IOverlayHandler
     public async Task Start()
     {
         var shaderLoader = new ShaderLoader();
-        await _game.LoadAssetsEssentialAsync(shaderLoader);
+        var textureLoader = new TextureLoader();
+        await _game.LoadAssetsEssentialAsync(shaderLoader, textureLoader);
         _game.InitializeScene(shaderLoader);
         Singletons.GameInstance = _game;
         Singletons.RendererInstance = this;
@@ -32,7 +33,7 @@ public sealed class GameController : IDisposable, IRenderer, IOverlayHandler
         _fpsCounter.Start();
         // Delay 2 frames to allow the game to render first frame and do first Update
         await Task.Delay(_interval * 2);
-        await _game.LoadAssetsExtendedAsync();
+        await _game.LoadAssetsExtendedAsync(shaderLoader, textureLoader);
     }
 
     private void Tick(object? sender, ElapsedEventArgs e)

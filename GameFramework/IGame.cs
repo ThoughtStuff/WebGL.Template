@@ -12,7 +12,7 @@ public interface IGame : IRenderer
     /// Called before InitializeScene.
     /// Use for loading smaller lower-fidelity assets for first render.
     /// </summary>
-    Task LoadAssetsEssentialAsync(IShaderLoader shaderLoader);
+    Task LoadAssetsEssentialAsync(IShaderLoader shaderLoader, ITextureLoader textureLoader);
 
     /// <summary>
     /// Creates initial resources for the game scene.
@@ -23,7 +23,7 @@ public interface IGame : IRenderer
     /// Called after first Update and Render.
     /// Use for loading larger higher-fidelity assets.
     /// </summary>
-    Task LoadAssetsExtendedAsync();
+    Task LoadAssetsExtendedAsync(IShaderLoader shaderLoader, ITextureLoader textureLoader);
 
     /// <summary>
     /// Updates the game scene based on the elapsed wall-clock time.

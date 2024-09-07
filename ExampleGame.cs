@@ -11,7 +11,7 @@ public class ExampleGame : IGame
     public string? OverlayText => null;
 
     /// <inheritdoc/>
-    public Task LoadAssetsEssentialAsync(IShaderLoader shaderLoader)
+    public Task LoadAssetsEssentialAsync(IShaderLoader shaderLoader, ITextureLoader textureLoader)
     {
         // Load low-res textures here for the initial render
         return Task.CompletedTask;
@@ -63,7 +63,7 @@ public class ExampleGame : IGame
     }
 
     /// <inheritdoc/>
-    public Task LoadAssetsExtendedAsync()
+    public Task LoadAssetsExtendedAsync(IShaderLoader shaderLoader, ITextureLoader textureLoader)
     {
         // Load high-res textures here for full fidelity
         return Task.CompletedTask;
