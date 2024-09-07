@@ -2,9 +2,9 @@ using WebGL.Template.GameFramework;
 
 namespace WebGL.Template.Examples;
 
-class HelloTriangle : IGame
+public class HelloQuad : IGame
 {
-    public string? OverlayText => "Hello, Triangle";
+    public string? OverlayText => "Hello, Quad";
 
     public void InitializeScene(IShaderLoader shaderLoader)
     {
@@ -12,14 +12,15 @@ class HelloTriangle : IGame
         var shaderProgram = shaderLoader.LoadShaderProgram("vertex", "fragment");
 
         // POSITIONS
-        // Create a buffer for the triangle's vertex positions.
+        // Create a buffer for the quad's vertex positions.
         var positionBuffer = GL.CreateBuffer();
         GL.BindBuffer(GL.ARRAY_BUFFER, positionBuffer);
-        // Define the vertex positions for the triangle. Assume NDC coordinates [-1 ... 1].
+        // Define the vertex positions for the quad. Assume NDC coordinates [-1 ... 1].
         Span<float> positions =
         [
-            0.0f, 1.0f,
+            -1.0f, 1.0f,
             -1.0f, -1.0f,
+            1.0f, 1.0f,
             1.0f, -1.0f
         ];
         GL.BufferData(GL.ARRAY_BUFFER, positions, GL.STATIC_DRAW);
@@ -29,15 +30,16 @@ class HelloTriangle : IGame
         GL.EnableVertexAttribArray(positionAttributeLocation);
 
         // COLORS
-        // Create a buffer for the triangle's colors.
+        // Create a buffer for the quad's colors.
         var colorBuffer = GL.CreateBuffer();
         GL.BindBuffer(GL.ARRAY_BUFFER, colorBuffer);
-        // Define the colors for each vertex of the triangle (Rainbow: Red, Green, Blue).
+        // Define the colors for each vertex of the quad (Rainbow: Red, Green, Blue, Yellow).
         Span<float> colors =
         [
             1.0f, 0.0f, 0.0f, 1.0f, // Red
             0.0f, 1.0f, 0.0f, 1.0f, // Green
-            0.0f, 0.0f, 1.0f, 1.0f  // Blue
+            0.0f, 0.0f, 1.0f, 1.0f, // Blue
+            1.0f, 1.0f, 0.0f, 1.0f  // Yellow
         ];
         GL.BufferData(GL.ARRAY_BUFFER, colors, GL.STATIC_DRAW);
         // Tell WebGL how to pull out the colors from the color buffer into the vertexColor attribute.
@@ -52,7 +54,7 @@ class HelloTriangle : IGame
     public void Render()
     {
         GL.Clear(GL.COLOR_BUFFER_BIT);
-        GL.DrawArrays(GL.TRIANGLES, 0, 3);
+        GL.DrawArrays(GL.TRIANGLE_STRIP, 0, 4);
     }
 
     public Task LoadAssetsEssentialAsync(IShaderLoader shaderLoader) => Task.CompletedTask;
