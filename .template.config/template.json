@@ -1,9 +1,9 @@
 {
   "$schema": "http://json.schemastore.org/template",
   "author": "Jacob Foshee",
-  "classifications": ["Web", "WebGL", "WebAssembly", "wasm"],
+  "classifications": ["Web", "WebGL", "WebAssembly", "Browser"],
   "identity": "ThoughtStuff.WebGLTemplate",
-  "name": "WebGL Wasm Browser App",
+  "name": "WebGL WebAssembly Browser App",
   "shortName": "webgl",
   "sourceName": "WebGL.Template",
   "tags": {
