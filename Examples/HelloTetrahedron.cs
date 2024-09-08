@@ -1,7 +1,15 @@
+using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.JavaScript;
 using WebGL.Template.GameFramework;
 
 namespace WebGL.Template.Examples;
+
+[StructLayout(LayoutKind.Sequential, Pack = 1)]
+struct ColorVertex3(Vector3 position, Vector3 color)
+{
+    public Vector3 Position = position;
+    public Vector3 Color = color;
+}
 
 public class HelloTetrahedron : IGame
 {
@@ -28,64 +36,49 @@ public class HelloTetrahedron : IGame
         _modelViewLocation = GL.GetUniformLocation(_shaderProgram, "uModelViewMatrix");
         _projectionLocation = GL.GetUniformLocation(_shaderProgram, "uProjectionMatrix");
 
-        // Define vertex positions for the tetrahedron
-        Span<float> vertices =
+        // Define vertices for the tetrahedron
+        Span<ColorVertex3> vertices =
         [
-            .5f, .5f, .5f,
-            -.5f, -.5f, .5f,
-            -.5f, .5f, -.5f,
-
-            .5f, -.5f, -.5f,
-            -.5f, -.5f, .5f,
-            -.5f, .5f, -.5f,
-
-            .5f, .5f, .5f,
-            -.5f, -.5f, .5f,
-            .5f, -.5f, -.5f,
-
-            .5f, .5f, .5f,
-            .5f, -.5f, -.5f,
-            -.5f, .5f, -.5f
-        ];
-
-        // Define colors for the vertices
-        Span<float> colors =
-        [
-            // Vertex colors (RGB)
-            1f, 0f, 0f,    // Red
-            1f, 0f, 0f,    // Red
-            1f, 0f, 0f,    // Red
-
-            0f, 1f, 0f,    // Green
-            0f, 1f, 0f,    // Green
-            0f, 1f, 0f,    // Green
-
-            0f, 0f, 1f,    // Blue
-            0f, 0f, 1f,    // Blue
-            0f, 0f, 1f,    // Blue
-
-            1f, 1f, 0f,    // Yellow
-            1f, 1f, 0f,    // Yellow
-            1f, 1f, 0f     // Yellow
+            // Red face
+            new ColorVertex3(new(0.5f, 0.5f, 0.5f), new(1f, 0f, 0f)),
+            new ColorVertex3(new(-0.5f, -0.5f, 0.5f), new(1f, 0f, 0f)),
+            new ColorVertex3(new(-0.5f, 0.5f, -0.5f), new(1f, 0f, 0f)),
+            // Green face
+            new ColorVertex3(new(0.5f, -0.5f, -0.5f), new(0f, 1f, 0f)),
+            new ColorVertex3(new(-0.5f, -0.5f, 0.5f), new(0f, 1f, 0f)),
+            new ColorVertex3(new(-0.5f, 0.5f, -0.5f), new(0f, 1f, 0f)),
+            // Blue face
+            new ColorVertex3(new(0.5f, 0.5f, 0.5f), new(0f, 0f, 1f)),
+            new ColorVertex3(new(-0.5f, -0.5f, 0.5f), new(0f, 0f, 1f)),
+            new ColorVertex3(new(0.5f, -0.5f, -0.5f), new(0f, 0f, 1f)),
+            // Yellow face
+            new ColorVertex3(new(0.5f, 0.5f, 0.5f), new(1f, 1f, 0f)),
+            new ColorVertex3(new(0.5f, -0.5f, -0.5f), new(1f, 1f, 0f)),
+            new ColorVertex3(new(-0.5f, 0.5f, -0.5f), new(1f, 1f, 0f))
         ];
 
         // Create and bind the vertex buffer
-        var positionBuffer = GL.CreateBuffer();
-        GL.BindBuffer(GL.ARRAY_BUFFER, positionBuffer);
+        var vertexBuffer = GL.CreateBuffer();
+        GL.BindBuffer(GL.ARRAY_BUFFER, vertexBuffer);
         GL.BufferData(GL.ARRAY_BUFFER, vertices, GL.STATIC_DRAW);
 
         var positionLocation = GL.GetAttribLocation(_shaderProgram, "aPosition");
         GL.EnableVertexAttribArray(positionLocation);
-        GL.VertexAttribPointer(positionLocation, 3, GL.FLOAT, false, 0, 0);
-
-        // Create and bind the color buffer
-        var colorBuffer = GL.CreateBuffer();
-        GL.BindBuffer(GL.ARRAY_BUFFER, colorBuffer);
-        GL.BufferData(GL.ARRAY_BUFFER, colors, GL.STATIC_DRAW);
+        GL.VertexAttribPointer(positionLocation,
+                               size: 3,
+                               type: GL.FLOAT,
+                               normalized: false,
+                               stride: Marshal.SizeOf<ColorVertex3>(),
+                               offset: Marshal.OffsetOf<ColorVertex3>(nameof(ColorVertex3.Position)).ToInt32());
 
         var colorLocation = GL.GetAttribLocation(_shaderProgram, "aColor");
         GL.EnableVertexAttribArray(colorLocation);
-        GL.VertexAttribPointer(colorLocation, 3, GL.FLOAT, false, 0, 0);
+        GL.VertexAttribPointer(colorLocation,
+                               size: 3,
+                               type: GL.FLOAT,
+                               normalized: false,
+                               stride: Marshal.SizeOf<ColorVertex3>(),
+                               offset: Marshal.OffsetOf<ColorVertex3>(nameof(ColorVertex3.Color)).ToInt32());
 
         // Enable depth testing
         GL.Enable(GL.DEPTH_TEST);
