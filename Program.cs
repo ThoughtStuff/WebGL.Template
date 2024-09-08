@@ -1,4 +1,5 @@
 using WebGL.Template;
+using WebGL.Template.Examples;
 using WebGL.Template.GameFramework;
 
 // Print information about the GL context to demonstrate that WebGL is working
@@ -13,6 +14,12 @@ Console.WriteLine("GLSL Version: " + glslVersion);
 
 // Bootstrap our Game which handles input, updates, and rendering
 var game = new ExampleGame();
+// More examples from the Examples folder:
+// var game = new HelloTriangle();
+// var game = new HelloQuad();
+// var game = new HelloTextureMap();
+// var game = new HelloTetrahedron();
+
 using var gameController = new GameController(game);
 await gameController.Start();
 
