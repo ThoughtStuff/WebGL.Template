@@ -8,7 +8,8 @@ public class HelloTetrahedron : IGame
     private float _rotationAngleX = 0f;
     private float _rotationAngleY = 0f;
     private JSObject? _shaderProgram;
-    private JSObject? _modelTransformLocation;
+    private JSObject? _modelViewLocation;
+    private JSObject? _projectionLocation;
 
     public string? OverlayText => "Hello, Tetrahedron";
 
@@ -23,8 +24,9 @@ public class HelloTetrahedron : IGame
         // Load shader program from files using IShaderLoader
         _shaderProgram = shaderLoader.LoadShaderProgram("HelloTetrahedron/vertex", "HelloTetrahedron/fragment");
 
-        // Store location of the model transform uniform
-        _modelTransformLocation = GL.GetUniformLocation(_shaderProgram, "uModelTransform");
+        // Store location of the model-view and projection matrix uniforms
+        _modelViewLocation = GL.GetUniformLocation(_shaderProgram, "uModelViewMatrix");
+        _projectionLocation = GL.GetUniformLocation(_shaderProgram, "uProjectionMatrix");
 
         // Define vertex positions for the tetrahedron
         Span<float> vertices =
@@ -90,9 +92,6 @@ public class HelloTetrahedron : IGame
 
         // Set the clear color to black
         GL.ClearColor(0, 0, 0, 1);
-
-        // Disable back face culling
-        // GL.Disable(GL.CULL_FACE);
     }
 
     public Task LoadAssetsExtendedAsync(IShaderLoader shaderLoader, ITextureLoader textureLoader)
@@ -104,9 +103,9 @@ public class HelloTetrahedron : IGame
     public void Update(TimeSpan deltaTime)
     {
         // Rotate the tetrahedron
-        _rotationAngleX += (float)deltaTime.TotalSeconds * 15f; // Rotate 15 degrees per second
+        _rotationAngleX += (float)deltaTime.TotalSeconds * 30;
         _rotationAngleX %= 360f;
-        _rotationAngleY += (float)deltaTime.TotalSeconds * 45f; // Rotate 45 degrees per second
+        _rotationAngleY += (float)deltaTime.TotalSeconds * 120;
         _rotationAngleY %= 360f;
     }
 
@@ -117,19 +116,30 @@ public class HelloTetrahedron : IGame
 
     public void Render()
     {
-        if (_shaderProgram is null || _modelTransformLocation is null)
+        if (_shaderProgram is null || _modelViewLocation is null || _projectionLocation is null)
         {
-            throw new InvalidOperationException("Shader program or model transform location is null.");
+            throw new InvalidOperationException("Shader program or matrix locations are null.");
         }
 
         GL.Clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
         GL.UseProgram(_shaderProgram);
 
-        var modelTransformMatrix = Matrix4x4.CreateRotationY(ToRadians(_rotationAngleY))
-            * Matrix4x4.CreateRotationX(ToRadians(_rotationAngleX));
+        // Create Model-View matrix (rotation)
+        var modelViewMatrix = Matrix4x4.CreateRotationY(ToRadians(_rotationAngleY)) *
+                              Matrix4x4.CreateRotationX(ToRadians(_rotationAngleX)) *
+                              Matrix4x4.CreateTranslation(0, 0, -2);
 
-        // Send model transform matrix to shader
-        GL.UniformMatrix(_modelTransformLocation, false, ref modelTransformMatrix);
+        // Create Projection matrix (perspective projection)
+        var projectionMatrix = Matrix4x4.CreatePerspectiveFieldOfView(
+            fieldOfView: ToRadians(60),
+            aspectRatio: 1.0f,           // TODO: Fix aspect ratio
+            nearPlaneDistance: 0.1f,
+            farPlaneDistance: 10
+        );
+
+        // Send model-view and projection matrices to the shader
+        GL.UniformMatrix(_modelViewLocation, false, ref modelViewMatrix);
+        GL.UniformMatrix(_projectionLocation, false, ref projectionMatrix);
 
         // Draw the tetrahedron
         GL.DrawArrays(GL.TRIANGLES, 0, 12); // Assuming 12 vertices for 4 triangles (tetrahedron)
