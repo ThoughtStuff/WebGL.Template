@@ -10,7 +10,7 @@ public class HelloTetrahedron : IGame
     private JSObject? _shaderProgram;
     private JSObject? _modelTransformLocation;
 
-    public string? OverlayText => null;
+    public string? OverlayText => "Hello, Tetrahedron";
 
     public Task LoadAssetsEssentialAsync(IShaderLoader shaderLoader, ITextureLoader textureLoader)
     {
@@ -29,21 +29,21 @@ public class HelloTetrahedron : IGame
         // Define vertex positions for the tetrahedron
         Span<float> vertices =
         [
-            0, 0, 0,
-            1, 0, 0,
-            0, 1, 0,
+            .5f, .5f, .5f,
+            -.5f, -.5f, .5f,
+            -.5f, .5f, -.5f,
 
-            0, 0, 1,
-            1, 0, 0,
-            0, 1, 0,
+            .5f, -.5f, -.5f,
+            -.5f, -.5f, .5f,
+            -.5f, .5f, -.5f,
 
-            0, 0, 1,
-            1, 0, 0,
-            0, 0, 0,
+            .5f, .5f, .5f,
+            -.5f, -.5f, .5f,
+            .5f, -.5f, -.5f,
 
-            0, 0, 1,
-            0, 1, 0,
-            0, 0, 0
+            .5f, .5f, .5f,
+            .5f, -.5f, -.5f,
+            -.5f, .5f, -.5f
         ];
 
         // Define colors for the vertices
@@ -92,7 +92,7 @@ public class HelloTetrahedron : IGame
         GL.ClearColor(0, 0, 0, 1);
 
         // Disable back face culling
-        GL.Disable(GL.CULL_FACE);
+        // GL.Disable(GL.CULL_FACE);
     }
 
     public Task LoadAssetsExtendedAsync(IShaderLoader shaderLoader, ITextureLoader textureLoader)
