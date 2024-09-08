@@ -18,7 +18,7 @@ public class HelloTextureMap : IGame
     public async Task LoadAssetsEssentialAsync(IShaderLoader shaderLoader, ITextureLoader textureLoader)
     {
         // Load the shader program
-        _shaderProgram = shaderLoader.LoadShaderProgram("BasicTextureMap/vertex", "BasicTextureMap/fragment");
+        _shaderProgram = shaderLoader.LoadShaderProgram("HelloTextureMap/vertex", "HelloTextureMap/fragment");
 
         // Load the low-res texture
         string texturePath = "/textures/webgl-logo-lowres.png";
