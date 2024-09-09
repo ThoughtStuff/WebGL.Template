@@ -7,12 +7,12 @@ attribute vec2 a_InstanceTransformRow0; // First row of 2x2 transformation matri
 attribute vec2 a_InstanceTransformRow1; // Second row of 2x2 transformation matrix
 attribute float a_InstanceFrameIndex;   // Per-instance sprite frame index
 
-varying mediump vec2 v_TextureCoord;
-
 uniform float u_SpriteSheetColumnCount;
 uniform float u_SpriteSheetRowCount;
 uniform float u_PaddingRight;           // wasted space on the right of the sprite sheet
 uniform float u_PaddingBottom;          // wasted space on the bottom of the sprite sheet
+
+varying mediump vec2 v_TextureCoord;
 
 void main(void) {
     // Apply the 2x2 transformation matrix to the position
