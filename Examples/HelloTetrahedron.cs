@@ -19,6 +19,8 @@ sealed class HelloTetrahedron : IGame
     private JSObject? _modelViewLocation;
     private JSObject? _projectionLocation;
     private JSObject? _vertexBuffer;
+    private readonly List<int> _vertexAttributeLocations = [];
+
 
     public string? OverlayText => "Hello, Tetrahedron";
 
@@ -65,6 +67,7 @@ sealed class HelloTetrahedron : IGame
 
         var positionLocation = GL.GetAttribLocation(_shaderProgram, "a_VertexPosition");
         GL.EnableVertexAttribArray(positionLocation);
+        _vertexAttributeLocations.Add(positionLocation);
         GL.VertexAttribPointer(positionLocation,
                                size: 3,
                                type: GL.FLOAT,
@@ -74,6 +77,7 @@ sealed class HelloTetrahedron : IGame
 
         var colorLocation = GL.GetAttribLocation(_shaderProgram, "a_VertexColor");
         GL.EnableVertexAttribArray(colorLocation);
+        _vertexAttributeLocations.Add(colorLocation);
         GL.VertexAttribPointer(colorLocation,
                                size: 3,
                                type: GL.FLOAT,
@@ -96,6 +100,16 @@ sealed class HelloTetrahedron : IGame
 
     public void Dispose()
     {
+        // Restore default settings
+        GL.Disable(GL.DEPTH_TEST);
+
+        // Disable all vertex attribute locations
+        foreach (var attributeLocation in _vertexAttributeLocations)
+        {
+            GL.DisableVertexAttribArray(attributeLocation);
+        }
+        _vertexAttributeLocations.Clear();
+
         // Dispose of the vertex buffer
         if (_vertexBuffer is not null)
         {
@@ -106,11 +120,8 @@ sealed class HelloTetrahedron : IGame
 
         // Dispose of the shader program
         if (_shaderProgram is not null)
-        {
-            GL.DeleteProgram(_shaderProgram);
-            _shaderProgram.Dispose();
-            _shaderProgram = null;
-        }
+            ShaderLoader.DisposeShaderProgram(_shaderProgram);
+        _shaderProgram = null;
     }
 
     public void Update(TimeSpan deltaTime)

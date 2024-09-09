@@ -174,7 +174,7 @@ static partial class GL
     internal static partial JSObject GetActiveUniform(JSObject program, int index);
 
     [JSImport("gl.getAttachedShaders", "main.js")]
-    internal static partial JSObject GetAttachedShaders(JSObject program);
+    internal static partial JSObject[] GetAttachedShaders(JSObject program);
 
     [JSImport("gl.getAttribLocation", "main.js")]
     internal static partial int GetAttribLocation(JSObject program, string name);
@@ -327,7 +327,7 @@ static partial class GL
     internal static partial void Uniform4i(JSObject location, int x, int y, int z, int w);
 
     [JSImport("gl.useProgram", "main.js")]
-    internal static partial void UseProgram(JSObject program);
+    internal static partial void UseProgram(JSObject? program);
 
     [JSImport("gl.validateProgram", "main.js")]
     internal static partial void ValidateProgram(JSObject program);

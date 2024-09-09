@@ -215,6 +215,9 @@ sealed class InstanceParticlesExample : IGame
 
     public void Dispose()
     {
+        // Restore default settings
+        GL.Disable(GL.BLEND);
+
         // Disable all vertex attribute locations
         foreach (var attributeLocation in _vertexAttributeLocations)
         {
@@ -248,11 +251,8 @@ sealed class InstanceParticlesExample : IGame
 
         // Dispose of the shader program
         if (_shaderProgram is not null)
-        {
-            GL.DeleteProgram(_shaderProgram);
-            _shaderProgram.Dispose();
-            _shaderProgram = null;
-        }
+            ShaderLoader.DisposeShaderProgram(_shaderProgram);
+        _shaderProgram = null;
     }
 
     /// <inheritdoc/>

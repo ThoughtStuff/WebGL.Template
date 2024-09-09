@@ -8,6 +8,8 @@ sealed class HelloTriangle : IGame
     private JSObject? _shaderProgram;
     private JSObject? _positionBuffer;
     private JSObject? _colorBuffer;
+    private readonly List<int> _vertexAttributeLocations = [];
+
 
     public string? OverlayText => "Hello, Triangle";
 
@@ -32,6 +34,7 @@ sealed class HelloTriangle : IGame
         var positionAttributeLocation = GL.GetAttribLocation(_shaderProgram, "a_VertexPosition");
         GL.VertexAttribPointer(positionAttributeLocation, 2, GL.FLOAT, false, 0, 0);
         GL.EnableVertexAttribArray(positionAttributeLocation);
+        _vertexAttributeLocations.Add(positionAttributeLocation);
 
         // COLORS
         // Create a buffer for the triangle's colors.
@@ -49,6 +52,7 @@ sealed class HelloTriangle : IGame
         var colorAttributeLocation = GL.GetAttribLocation(_shaderProgram, "a_VertexColor");
         GL.VertexAttribPointer(colorAttributeLocation, 4, GL.FLOAT, false, 0, 0);
         GL.EnableVertexAttribArray(colorAttributeLocation);
+        _vertexAttributeLocations.Add(colorAttributeLocation);
 
         // Set the clear color to cornflower blue
         GL.ClearColor(0.392f, 0.584f, 0.929f, 1.0f);
@@ -56,6 +60,13 @@ sealed class HelloTriangle : IGame
 
     public void Dispose()
     {
+        // Disable all vertex attribute locations
+        foreach (var attributeLocation in _vertexAttributeLocations)
+        {
+            GL.DisableVertexAttribArray(attributeLocation);
+        }
+        _vertexAttributeLocations.Clear();
+
         // Delete the position buffer
         if (_positionBuffer is not null)
         {
@@ -74,11 +85,8 @@ sealed class HelloTriangle : IGame
 
         // Delete the shader program
         if (_shaderProgram is not null)
-        {
-            GL.DeleteProgram(_shaderProgram);
-            _shaderProgram.Dispose();
-            _shaderProgram = null;
-        }
+            ShaderLoader.DisposeShaderProgram(_shaderProgram);
+        _shaderProgram = null;
     }
 
     public void Render()

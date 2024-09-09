@@ -51,4 +51,26 @@ class ShaderLoader : IShaderLoader
 
         return shader;
     }
+
+    /// <summary>
+    /// Ensures proper disposal of the shader program.
+    /// Also calls GL.UseProgram(null) to avoid using the disposed shader program.
+    /// </summary>
+    public static void DisposeShaderProgram(JSObject shaderProgram)
+    {
+        // Detach shaders from the program
+        var shaders = GL.GetAttachedShaders(shaderProgram);
+        foreach (var shader in shaders)
+        {
+            GL.DetachShader(shaderProgram, shader);
+            GL.DeleteShader(shader);
+        }
+
+        // Delete the shader program
+        GL.DeleteProgram(shaderProgram);
+        shaderProgram.Dispose();
+
+        // Avoid using the disposed shader program
+        GL.UseProgram(null);
+    }
 }

@@ -15,6 +15,8 @@ sealed class HelloTextureMap : IGame
     private JSObject? _highResTextureId;
     private JSObject? _positionBuffer;
     private JSObject? _textureCoordBuffer;
+    private readonly List<int> _vertexAttributeLocations = [];
+
 
     public string? OverlayText => "Hello, Texture Map";
 
@@ -60,6 +62,7 @@ sealed class HelloTextureMap : IGame
         var positionAttributeLocation = GL.GetAttribLocation(_shaderProgram, "a_VertexPosition");
         GL.VertexAttribPointer(positionAttributeLocation, 2, GL.FLOAT, false, 0, 0);
         GL.EnableVertexAttribArray(positionAttributeLocation);
+        _vertexAttributeLocations.Add(positionAttributeLocation);
 
         // TEXTURE COORDINATES
         // Create a buffer for the quad's texture coordinates.
@@ -78,6 +81,7 @@ sealed class HelloTextureMap : IGame
         var textureCoordAttributeLocation = GL.GetAttribLocation(_shaderProgram, "a_TextureCoord");
         GL.VertexAttribPointer(textureCoordAttributeLocation, 2, GL.FLOAT, false, 0, 0);
         GL.EnableVertexAttribArray(textureCoordAttributeLocation);
+        _vertexAttributeLocations.Add(textureCoordAttributeLocation);
 
         // Enable alpha blending for the textures which have an alpha channel
         GL.Enable(GL.BLEND);
@@ -118,6 +122,16 @@ sealed class HelloTextureMap : IGame
 
     public void Dispose()
     {
+        // Restore default settings
+        GL.Disable(GL.BLEND);
+
+        // Disable all vertex attribute locations
+        foreach (var attributeLocation in _vertexAttributeLocations)
+        {
+            GL.DisableVertexAttribArray(attributeLocation);
+        }
+        _vertexAttributeLocations.Clear();
+
         // Delete the position buffer
         if (_positionBuffer is not null)
         {
@@ -152,11 +166,8 @@ sealed class HelloTextureMap : IGame
 
         // Delete the shader program
         if (_shaderProgram is not null)
-        {
-            GL.DeleteProgram(_shaderProgram);
-            _shaderProgram.Dispose();
-            _shaderProgram = null;
-        }
+            ShaderLoader.DisposeShaderProgram(_shaderProgram);
+        _shaderProgram = null;
     }
 
     public void Update(TimeSpan deltaTime) { }
