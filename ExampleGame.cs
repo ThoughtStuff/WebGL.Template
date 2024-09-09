@@ -3,10 +3,12 @@ using WebGL.Template.GameFramework;
 
 namespace WebGL.Template;
 
-public class ExampleGame : IGame
+sealed class ExampleGame : IGame, IDisposable
 {
     private Vector2? _mousePosition;
     private JSObject? _positionBuffer;
+    private JSObject? _colorBuffer;
+    private JSObject? _shaderProgram;
 
     public string? OverlayText => null;
 
@@ -21,7 +23,7 @@ public class ExampleGame : IGame
     public void InitializeScene(IShaderLoader shaderLoader)
     {
         // Load the shader program
-        var shaderProgram = shaderLoader.LoadShaderProgram("Basic/ColorPassthrough_vert", "Basic/ColorPassthrough_frag");
+        _shaderProgram = shaderLoader.LoadShaderProgram("Basic/ColorPassthrough_vert", "Basic/ColorPassthrough_frag");
 
         // POSITIONS
         // Create a buffer for the triangle's vertex positions.
@@ -36,14 +38,14 @@ public class ExampleGame : IGame
         ];
         GL.BufferData(GL.ARRAY_BUFFER, positions, GL.STATIC_DRAW);
         // Tell WebGL how to pull out the positions from the position buffer into the vertexPosition attribute.
-        var positionAttributeLocation = GL.GetAttribLocation(shaderProgram, "a_VertexPosition");
+        var positionAttributeLocation = GL.GetAttribLocation(_shaderProgram, "a_VertexPosition");
         GL.VertexAttribPointer(positionAttributeLocation, 2, GL.FLOAT, false, 0, 0);
         GL.EnableVertexAttribArray(positionAttributeLocation);
 
         // COLORS
         // Create a buffer for the triangle's colors.
-        var colorBuffer = GL.CreateBuffer();
-        GL.BindBuffer(GL.ARRAY_BUFFER, colorBuffer);
+        _colorBuffer = GL.CreateBuffer();
+        GL.BindBuffer(GL.ARRAY_BUFFER, _colorBuffer);
         // Define the colors for each vertex of the triangle (Rainbow: Red, Green, Blue).
         Span<float> colors =
         [
@@ -53,7 +55,7 @@ public class ExampleGame : IGame
         ];
         GL.BufferData(GL.ARRAY_BUFFER, colors, GL.STATIC_DRAW);
         // Tell WebGL how to pull out the colors from the color buffer into the vertexColor attribute.
-        var colorAttributeLocation = GL.GetAttribLocation(shaderProgram, "a_VertexColor");
+        var colorAttributeLocation = GL.GetAttribLocation(_shaderProgram, "a_VertexColor");
         GL.VertexAttribPointer(colorAttributeLocation, 4, GL.FLOAT, false, 0, 0);
         GL.EnableVertexAttribArray(colorAttributeLocation);
 
@@ -67,6 +69,30 @@ public class ExampleGame : IGame
     {
         // Load high-res textures here for full fidelity
         return Task.CompletedTask;
+    }
+
+    /// <inheritdoc/>
+    public void Dispose()
+    {
+        // Release WebGL resources
+        if (_colorBuffer is not null)
+        {
+            GL.DeleteBuffer(_colorBuffer);
+            _colorBuffer.Dispose();
+            _colorBuffer = null;
+        }
+        if (_positionBuffer is not null)
+        {
+            GL.DeleteBuffer(_positionBuffer);
+            _positionBuffer.Dispose();
+            _positionBuffer = null;
+        }
+        if (_shaderProgram is not null)
+        {
+            GL.DeleteProgram(_shaderProgram);
+            _shaderProgram.Dispose();
+            _shaderProgram = null;
+        }
     }
 
     /// <inheritdoc/>
@@ -126,6 +152,9 @@ public class ExampleGame : IGame
     public void Render()
     {
         GL.Clear(GL.COLOR_BUFFER_BIT);
-        GL.DrawArrays(GL.TRIANGLES, 0, 3);
+        if (_positionBuffer is not null)
+        {
+            GL.DrawArrays(GL.TRIANGLES, 0, 3);
+        }
     }
 }

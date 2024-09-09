@@ -1,6 +1,6 @@
 namespace WebGL.Template.GameFramework;
 
-public interface IGame : IRenderer
+public interface IGame : IRenderer, IDisposable
 {
     /// <summary>
     /// Optional text to display in the FPS overlay.

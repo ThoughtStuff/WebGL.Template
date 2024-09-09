@@ -8,10 +8,13 @@ namespace WebGL.Template.Examples;
 /// The texture map has transparent pixels which allow the background color to show through.
 /// An initial low-res texture is loaded first, then replaced with a high-res texture.
 /// </summary>
-public class HelloTextureMap : IGame
+sealed class HelloTextureMap : IGame
 {
     private JSObject? _shaderProgram;
     private JSObject? _lowResTextureId;
+    private JSObject? _highResTextureId;
+    private JSObject? _positionBuffer;
+    private JSObject? _textureCoordBuffer;
 
     public string? OverlayText => "Hello, Texture Map";
 
@@ -42,8 +45,8 @@ public class HelloTextureMap : IGame
 
         // POSITIONS
         // Create a buffer for the quad's vertex positions.
-        var positionBuffer = GL.CreateBuffer();
-        GL.BindBuffer(GL.ARRAY_BUFFER, positionBuffer);
+        _positionBuffer = GL.CreateBuffer();
+        GL.BindBuffer(GL.ARRAY_BUFFER, _positionBuffer);
         // Define the vertex positions for the quad. Assume NDC coordinates [-1 ... 1].
         Span<float> positions =
         [
@@ -60,8 +63,8 @@ public class HelloTextureMap : IGame
 
         // TEXTURE COORDINATES
         // Create a buffer for the quad's texture coordinates.
-        var textureCoordBuffer = GL.CreateBuffer();
-        GL.BindBuffer(GL.ARRAY_BUFFER, textureCoordBuffer);
+        _textureCoordBuffer = GL.CreateBuffer();
+        GL.BindBuffer(GL.ARRAY_BUFFER, _textureCoordBuffer);
         // Define the texture coordinates for each vertex of the quad.
         Span<float> textureCoords =
         [
@@ -93,11 +96,13 @@ public class HelloTextureMap : IGame
         var textureId = await textureLoader.LoadTexture(texturePath);
         GL.ActiveTexture(GL.TEXTURE0);
         GL.BindTexture(GL.TEXTURE_2D, textureId);
+        _highResTextureId = textureId;
 
         // Delete the low-res texture
         if (_lowResTextureId is not null)
         {
             GL.DeleteTexture(_lowResTextureId);
+            _lowResTextureId.Dispose();
             _lowResTextureId = null;
         }
     }
@@ -105,7 +110,53 @@ public class HelloTextureMap : IGame
     public void Render()
     {
         GL.Clear(GL.COLOR_BUFFER_BIT);
-        GL.DrawArrays(GL.TRIANGLE_STRIP, 0, 4);
+        if (_positionBuffer is not null)
+        {
+            GL.DrawArrays(GL.TRIANGLE_STRIP, 0, 4);
+        }
+    }
+
+    public void Dispose()
+    {
+        // Delete the position buffer
+        if (_positionBuffer is not null)
+        {
+            GL.DeleteBuffer(_positionBuffer);
+            _positionBuffer.Dispose();
+            _positionBuffer = null;
+        }
+
+        // Delete the texture coordinate buffer
+        if (_textureCoordBuffer is not null)
+        {
+            GL.DeleteBuffer(_textureCoordBuffer);
+            _textureCoordBuffer.Dispose();
+            _textureCoordBuffer = null;
+        }
+
+        // Delete the low-res texture if it hasn't been deleted already
+        if (_lowResTextureId is not null)
+        {
+            GL.DeleteTexture(_lowResTextureId);
+            _lowResTextureId.Dispose();
+            _lowResTextureId = null;
+        }
+
+        // Delete the high-res texture if it hasn't been deleted already
+        if (_highResTextureId is not null)
+        {
+            GL.DeleteTexture(_highResTextureId);
+            _highResTextureId.Dispose();
+            _highResTextureId = null;
+        }
+
+        // Delete the shader program
+        if (_shaderProgram is not null)
+        {
+            GL.DeleteProgram(_shaderProgram);
+            _shaderProgram.Dispose();
+            _shaderProgram = null;
+        }
     }
 
     public void Update(TimeSpan deltaTime) { }

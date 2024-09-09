@@ -8,7 +8,7 @@ namespace WebGL.Template.Examples.InstanceParticles;
 // Animated Arrows by SpikerMan
 // https://spikerman.itch.io/animated-arrows-cursors
 
-public class InstanceParticlesExample : IGame
+sealed class InstanceParticlesExample : IGame
 {
     private const int SpawnParticleCount = 25;
     private const float ScaleMin = 0.01f;
@@ -189,6 +189,33 @@ public class InstanceParticlesExample : IGame
         var textureId = await textureLoader.LoadTexture(texturePath);
         GL.ActiveTexture(GL.TEXTURE0);
         GL.BindTexture(GL.TEXTURE_2D, textureId);
+    }
+
+    public void Dispose()
+    {
+        // Dispose of the instance VBO
+        if (_instanceVBO is not null)
+        {
+            GL.DeleteBuffer(_instanceVBO);
+            _instanceVBO.Dispose();
+            _instanceVBO = null;
+        }
+
+        // Dispose of the position buffer
+        if (_positionBuffer is not null)
+        {
+            GL.DeleteBuffer(_positionBuffer);
+            _positionBuffer.Dispose();
+            _positionBuffer = null;
+        }
+
+        // Dispose of the shader program
+        if (_shaderProgram is not null)
+        {
+            GL.DeleteProgram(_shaderProgram);
+            _shaderProgram.Dispose();
+            _shaderProgram = null;
+        }
     }
 
     /// <inheritdoc/>

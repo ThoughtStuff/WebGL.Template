@@ -11,13 +11,14 @@ struct ColorVertex3(Vector3 position, Vector3 color)
     public Vector3 Color = color;
 }
 
-public class HelloTetrahedron : IGame
+sealed class HelloTetrahedron : IGame
 {
     private float _rotationAngleX = 0f;
     private float _rotationAngleY = 0f;
     private JSObject? _shaderProgram;
     private JSObject? _modelViewLocation;
     private JSObject? _projectionLocation;
+    private JSObject? _vertexBuffer;
 
     public string? OverlayText => "Hello, Tetrahedron";
 
@@ -58,8 +59,8 @@ public class HelloTetrahedron : IGame
         ];
 
         // Create and bind the vertex buffer
-        var vertexBuffer = GL.CreateBuffer();
-        GL.BindBuffer(GL.ARRAY_BUFFER, vertexBuffer);
+        _vertexBuffer = GL.CreateBuffer();
+        GL.BindBuffer(GL.ARRAY_BUFFER, _vertexBuffer);
         GL.BufferData(GL.ARRAY_BUFFER, vertices, GL.STATIC_DRAW);
 
         var positionLocation = GL.GetAttribLocation(_shaderProgram, "a_VertexPosition");
@@ -93,6 +94,25 @@ public class HelloTetrahedron : IGame
         return Task.CompletedTask;
     }
 
+    public void Dispose()
+    {
+        // Dispose of the vertex buffer
+        if (_vertexBuffer is not null)
+        {
+            GL.DeleteBuffer(_vertexBuffer);
+            _vertexBuffer.Dispose();
+            _vertexBuffer = null;
+        }
+
+        // Dispose of the shader program
+        if (_shaderProgram is not null)
+        {
+            GL.DeleteProgram(_shaderProgram);
+            _shaderProgram.Dispose();
+            _shaderProgram = null;
+        }
+    }
+
     public void Update(TimeSpan deltaTime)
     {
         // Rotate the tetrahedron
@@ -109,12 +129,11 @@ public class HelloTetrahedron : IGame
 
     public void Render()
     {
-        if (_shaderProgram is null || _modelViewLocation is null || _projectionLocation is null)
-        {
-            throw new InvalidOperationException("Shader program or matrix locations are null.");
-        }
-
         GL.Clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
+
+        if (_shaderProgram is null || _modelViewLocation is null || _projectionLocation is null)
+            return;
+
         GL.UseProgram(_shaderProgram);
 
         // Create Model-View matrix (rotation)
