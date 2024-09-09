@@ -30,7 +30,7 @@ public class HelloTetrahedron : IGame
     public void InitializeScene(IShaderLoader shaderLoader)
     {
         // Load shader program from files using IShaderLoader
-        _shaderProgram = shaderLoader.LoadShaderProgram("HelloTetrahedron/vertex", "HelloTetrahedron/fragment");
+        _shaderProgram = shaderLoader.LoadShaderProgram("HelloTetrahedron/vertex", "Basic/ColorPassthrough_frag");
 
         // Store location of the model-view and projection matrix uniforms
         _modelViewLocation = GL.GetUniformLocation(_shaderProgram, "u_ModelViewMatrix");
