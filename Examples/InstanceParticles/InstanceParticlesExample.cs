@@ -32,8 +32,8 @@ public class InstanceParticlesExample : IGame
     public async Task LoadAssetsEssentialAsync(IShaderLoader shaderLoader, ITextureLoader textureLoader)
     {
         // Load the shader program
-        _shaderProgram = shaderLoader.LoadShaderProgram("InstanceParticles/sprite-sheet-vertex",
-                                                        "InstanceParticles/fragment");
+        _shaderProgram = shaderLoader.LoadShaderProgram("Transformed2D/SpriteSheet_vert",
+                                                        "Basic/TextureUnlit_frag");
 
         // Load and bind texture (low-res for initial load)
         var textureId = await textureLoader.LoadTexture("/textures/arrows-lowres.png");
