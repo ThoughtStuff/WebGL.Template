@@ -1,5 +1,6 @@
 using WebGL.Template;
 using WebGL.Template.Examples;
+using WebGL.Template.Examples.InstanceParticles;
 using WebGL.Template.GameFramework;
 
 // Print information about the GL context to demonstrate that WebGL is working
@@ -19,6 +20,7 @@ var game = new ExampleGame();
 // var game = new HelloQuad();
 // var game = new HelloTextureMap();
 // var game = new HelloTetrahedron();
+// var game = new InstanceParticlesExample();
 
 using var gameController = new GameController(game);
 await gameController.Start();
