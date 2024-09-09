@@ -36,7 +36,7 @@ public class ExampleGame : IGame
         ];
         GL.BufferData(GL.ARRAY_BUFFER, positions, GL.STATIC_DRAW);
         // Tell WebGL how to pull out the positions from the position buffer into the vertexPosition attribute.
-        var positionAttributeLocation = GL.GetAttribLocation(shaderProgram, "aVertexPosition");
+        var positionAttributeLocation = GL.GetAttribLocation(shaderProgram, "a_VertexPosition");
         GL.VertexAttribPointer(positionAttributeLocation, 2, GL.FLOAT, false, 0, 0);
         GL.EnableVertexAttribArray(positionAttributeLocation);
 
@@ -53,7 +53,7 @@ public class ExampleGame : IGame
         ];
         GL.BufferData(GL.ARRAY_BUFFER, colors, GL.STATIC_DRAW);
         // Tell WebGL how to pull out the colors from the color buffer into the vertexColor attribute.
-        var colorAttributeLocation = GL.GetAttribLocation(shaderProgram, "aVertexColor");
+        var colorAttributeLocation = GL.GetAttribLocation(shaderProgram, "a_VertexColor");
         GL.VertexAttribPointer(colorAttributeLocation, 4, GL.FLOAT, false, 0, 0);
         GL.EnableVertexAttribArray(colorAttributeLocation);
 

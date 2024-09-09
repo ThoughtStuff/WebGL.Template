@@ -1,16 +1,18 @@
-attribute vec3 aPosition;
-attribute vec3 aColor;
+#version 100
 
-uniform mat4 uModelViewMatrix;  // Combined Model-View Matrix
-uniform mat4 uProjectionMatrix; // Projection Matrix
+attribute vec3 a_VertexPosition;
+attribute vec3 a_VertexColor;
 
-varying vec3 vColor;
+uniform mat4 u_ModelViewMatrix;     // Combined Model-View Matrix
+uniform mat4 u_ProjectionMatrix;    // Projection Matrix
+
+varying mediump vec3 v_Color;
 
 void main()
 {
     // Apply the model-view and projection transformation
-    gl_Position = uProjectionMatrix * uModelViewMatrix * vec4(aPosition, 1.0);
+    gl_Position = u_ProjectionMatrix * u_ModelViewMatrix * vec4(a_VertexPosition, 1.0);
 
     // Pass the vertex color to the fragment shader
-    vColor = aColor;
+    v_Color = a_VertexColor;
 }

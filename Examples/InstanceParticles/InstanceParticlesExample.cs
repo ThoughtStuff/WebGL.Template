@@ -39,7 +39,7 @@ public class InstanceParticlesExample : IGame
         var textureId = await textureLoader.LoadTexture("/textures/arrows-lowres.png");
         GL.ActiveTexture(GL.TEXTURE0);
         GL.BindTexture(GL.TEXTURE_2D, textureId);
-        var textureUniformLoc = GL.GetUniformLocation(_shaderProgram, "uTexture");
+        var textureUniformLoc = GL.GetUniformLocation(_shaderProgram, "u_Texture");
         GL.Uniform1i(textureUniformLoc, 0);
 
         // Sprite Sheet parameters (see textures/arrows.json)
@@ -59,10 +59,10 @@ public class InstanceParticlesExample : IGame
         _fpsMax = 120;
 
         // Setup Sprite Sheet parameters as shader Uniforms
-        var uSpriteSheetColumnCountLocation = GL.GetUniformLocation(_shaderProgram, "uSpriteSheetColumnCount");
-        var uSpriteSheetRowCountLocation = GL.GetUniformLocation(_shaderProgram, "uSpriteSheetRowCount");
-        var uPaddingRightLoc = GL.GetUniformLocation(_shaderProgram, "uPaddingRight");
-        var uPaddingBottomLoc = GL.GetUniformLocation(_shaderProgram, "uPaddingBottom");
+        var uSpriteSheetColumnCountLocation = GL.GetUniformLocation(_shaderProgram, "u_SpriteSheetColumnCount");
+        var uSpriteSheetRowCountLocation = GL.GetUniformLocation(_shaderProgram, "u_SpriteSheetRowCount");
+        var uPaddingRightLoc = GL.GetUniformLocation(_shaderProgram, "u_PaddingRight");
+        var uPaddingBottomLoc = GL.GetUniformLocation(_shaderProgram, "u_PaddingBottom");
         GL.Uniform1f(uSpriteSheetColumnCountLocation, columnCount);
         GL.Uniform1f(uSpriteSheetRowCountLocation, rowCount);
         GL.Uniform1f(uPaddingRightLoc, paddingRight);
@@ -95,8 +95,8 @@ public class InstanceParticlesExample : IGame
         GL.BufferData(GL.ARRAY_BUFFER, vertices, GL.STATIC_DRAW);
 
         // Get attribute locations for position and texture coordinates
-        var posLoc = GL.GetAttribLocation(_shaderProgram, "aPosition");
-        var texLoc = GL.GetAttribLocation(_shaderProgram, "aTexCoord");
+        var posLoc = GL.GetAttribLocation(_shaderProgram, "a_VertexPosition");
+        var texLoc = GL.GetAttribLocation(_shaderProgram, "a_TextureCoord");
 
         // Enable the position attribute
         GL.VertexAttribPointer(index: posLoc,
@@ -125,7 +125,7 @@ public class InstanceParticlesExample : IGame
 
         // Set up TransformRow0 (a vec2 attribute)
         var transformRow0Offset = Marshal.OffsetOf<InstanceData>(nameof(InstanceData.TransformRow0)).ToInt32();
-        var instanceTransformRow0Loc = GL.GetAttribLocation(_shaderProgram, "aInstanceTransformRow0");
+        var instanceTransformRow0Loc = GL.GetAttribLocation(_shaderProgram, "a_InstanceTransformRow0");
         GL.EnableVertexAttribArray(instanceTransformRow0Loc);
         GL.VertexAttribDivisor(instanceTransformRow0Loc, 1);
         GL.VertexAttribPointer(index: instanceTransformRow0Loc,
@@ -137,7 +137,7 @@ public class InstanceParticlesExample : IGame
 
         // Set up TransformRow1 (a vec2 attribute)
         var transformRow1Offset = Marshal.OffsetOf<InstanceData>(nameof(InstanceData.TransformRow1)).ToInt32();
-        var instanceTransformRow1Loc = GL.GetAttribLocation(_shaderProgram, "aInstanceTransformRow1");
+        var instanceTransformRow1Loc = GL.GetAttribLocation(_shaderProgram, "a_InstanceTransformRow1");
         GL.EnableVertexAttribArray(instanceTransformRow1Loc);
         GL.VertexAttribDivisor(instanceTransformRow1Loc, 1);
         GL.VertexAttribPointer(index: instanceTransformRow1Loc,
@@ -149,7 +149,7 @@ public class InstanceParticlesExample : IGame
 
         // Set up Translation (a vec2 attribute)
         var translationOffset = Marshal.OffsetOf<InstanceData>(nameof(InstanceData.Translation)).ToInt32();
-        var instancePosLoc = GL.GetAttribLocation(_shaderProgram, "aInstanceTranslation");
+        var instancePosLoc = GL.GetAttribLocation(_shaderProgram, "a_InstanceTranslation");
         GL.EnableVertexAttribArray(instancePosLoc);
         GL.VertexAttribDivisor(instancePosLoc, 1);
         GL.VertexAttribPointer(index: instancePosLoc,
@@ -161,7 +161,7 @@ public class InstanceParticlesExample : IGame
 
         // Set up SpriteIndex (a float attribute)
         var spriteIndexOffset = Marshal.OffsetOf<InstanceData>(nameof(InstanceData.SpriteIndex)).ToInt32();
-        var instanceSpriteIndexLoc = GL.GetAttribLocation(_shaderProgram, "aInstanceSpriteIndex");
+        var instanceSpriteIndexLoc = GL.GetAttribLocation(_shaderProgram, "a_InstanceFrameIndex");
         GL.EnableVertexAttribArray(instanceSpriteIndexLoc);
         GL.VertexAttribDivisor(instanceSpriteIndexLoc, 1);
         GL.VertexAttribPointer(index: instanceSpriteIndexLoc,

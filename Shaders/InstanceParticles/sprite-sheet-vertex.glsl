@@ -1,39 +1,39 @@
 #version 100
 
-attribute vec2 aPosition;
-attribute vec2 aTexCoord;
-attribute vec2 aInstanceTranslation;    // Per-instance translation
-attribute vec2 aInstanceTransformRow0;  // First row of 2x2 transformation matrix
-attribute vec2 aInstanceTransformRow1;  // Second row of 2x2 transformation matrix
-attribute float aInstanceSpriteIndex;   // Per-instance sprite index
+attribute vec2 a_VertexPosition;
+attribute vec2 a_TextureCoord;
+attribute vec2 a_InstanceTranslation;   // Per-instance translation
+attribute vec2 a_InstanceTransformRow0; // First row of 2x2 transformation matrix
+attribute vec2 a_InstanceTransformRow1; // Second row of 2x2 transformation matrix
+attribute float a_InstanceFrameIndex;   // Per-instance sprite frame index
 
-varying vec2 vTexCoord;
+varying mediump vec2 v_TextureCoord;
 
-uniform float uSpriteSheetColumnCount;
-uniform float uSpriteSheetRowCount;
-uniform float uPaddingRight;            // wasted space on the right of the sprite sheet
-uniform float uPaddingBottom;           // wasted space on the bottom of the sprite sheet
+uniform float u_SpriteSheetColumnCount;
+uniform float u_SpriteSheetRowCount;
+uniform float u_PaddingRight;           // wasted space on the right of the sprite sheet
+uniform float u_PaddingBottom;          // wasted space on the bottom of the sprite sheet
 
 void main(void) {
     // Apply the 2x2 transformation matrix to the position
     vec2 transformedPosition = vec2(
-        dot(aPosition, aInstanceTransformRow0),
-        dot(aPosition, aInstanceTransformRow1)
+        dot(a_VertexPosition, a_InstanceTransformRow0),
+        dot(a_VertexPosition, a_InstanceTransformRow1)
     );
-    vec2 worldPosition = transformedPosition + aInstanceTranslation;
+    vec2 worldPosition = transformedPosition + a_InstanceTranslation;
     gl_Position = vec4(worldPosition, 0.0, 1.0);
 
     // Adjusted sprite dimensions accounting for padding
-    float spriteWidth = (1.0 - uPaddingRight) / uSpriteSheetColumnCount;
-    float spriteHeight = (1.0 - uPaddingBottom) / uSpriteSheetRowCount;
+    float spriteWidth = (1.0 - u_PaddingRight) / u_SpriteSheetColumnCount;
+    float spriteHeight = (1.0 - u_PaddingBottom) / u_SpriteSheetRowCount;
 
     // Calculate column and row from sprite index
-    float column = mod(aInstanceSpriteIndex, uSpriteSheetColumnCount);
-    float row = floor(aInstanceSpriteIndex / uSpriteSheetColumnCount);
+    float column = mod(a_InstanceFrameIndex, u_SpriteSheetColumnCount);
+    float row = floor(a_InstanceFrameIndex / u_SpriteSheetColumnCount);
 
     // Calculate texture offset
     vec2 spriteOffset = vec2(column * spriteWidth, row * spriteHeight);
 
     // Adjust texture coordinates based on sprite index, accounting for padding
-    vTexCoord = aTexCoord * vec2(spriteWidth, spriteHeight) + spriteOffset;
+    v_TextureCoord = a_TextureCoord * vec2(spriteWidth, spriteHeight) + spriteOffset;
 }

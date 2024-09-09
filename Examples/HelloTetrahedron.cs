@@ -33,8 +33,8 @@ public class HelloTetrahedron : IGame
         _shaderProgram = shaderLoader.LoadShaderProgram("HelloTetrahedron/vertex", "HelloTetrahedron/fragment");
 
         // Store location of the model-view and projection matrix uniforms
-        _modelViewLocation = GL.GetUniformLocation(_shaderProgram, "uModelViewMatrix");
-        _projectionLocation = GL.GetUniformLocation(_shaderProgram, "uProjectionMatrix");
+        _modelViewLocation = GL.GetUniformLocation(_shaderProgram, "u_ModelViewMatrix");
+        _projectionLocation = GL.GetUniformLocation(_shaderProgram, "u_ProjectionMatrix");
 
         // Define vertices for the tetrahedron
         Span<ColorVertex3> vertices =
@@ -62,7 +62,7 @@ public class HelloTetrahedron : IGame
         GL.BindBuffer(GL.ARRAY_BUFFER, vertexBuffer);
         GL.BufferData(GL.ARRAY_BUFFER, vertices, GL.STATIC_DRAW);
 
-        var positionLocation = GL.GetAttribLocation(_shaderProgram, "aPosition");
+        var positionLocation = GL.GetAttribLocation(_shaderProgram, "a_VertexPosition");
         GL.EnableVertexAttribArray(positionLocation);
         GL.VertexAttribPointer(positionLocation,
                                size: 3,
@@ -71,7 +71,7 @@ public class HelloTetrahedron : IGame
                                stride: Marshal.SizeOf<ColorVertex3>(),
                                offset: Marshal.OffsetOf<ColorVertex3>(nameof(ColorVertex3.Position)).ToInt32());
 
-        var colorLocation = GL.GetAttribLocation(_shaderProgram, "aColor");
+        var colorLocation = GL.GetAttribLocation(_shaderProgram, "a_VertexColor");
         GL.EnableVertexAttribArray(colorLocation);
         GL.VertexAttribPointer(colorLocation,
                                size: 3,

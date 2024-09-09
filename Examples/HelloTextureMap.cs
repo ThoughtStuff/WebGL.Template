@@ -29,7 +29,7 @@ public class HelloTextureMap : IGame
                                                         nearestNeighborMagnification: false);
         GL.ActiveTexture(GL.TEXTURE0);
         GL.BindTexture(GL.TEXTURE_2D, textureId);
-        var textureUniformLoc = GL.GetUniformLocation(_shaderProgram, "uTexture");
+        var textureUniformLoc = GL.GetUniformLocation(_shaderProgram, "u_Texture");
         GL.Uniform1i(textureUniformLoc, 0);
 
         _lowResTextureId = textureId;
@@ -54,7 +54,7 @@ public class HelloTextureMap : IGame
         ];
         GL.BufferData(GL.ARRAY_BUFFER, positions, GL.STATIC_DRAW);
         // Tell WebGL how to pull out the positions from the position buffer into the vertexPosition attribute.
-        var positionAttributeLocation = GL.GetAttribLocation(_shaderProgram, "aVertexPosition");
+        var positionAttributeLocation = GL.GetAttribLocation(_shaderProgram, "a_VertexPosition");
         GL.VertexAttribPointer(positionAttributeLocation, 2, GL.FLOAT, false, 0, 0);
         GL.EnableVertexAttribArray(positionAttributeLocation);
 
@@ -72,7 +72,7 @@ public class HelloTextureMap : IGame
         ];
         GL.BufferData(GL.ARRAY_BUFFER, textureCoords, GL.STATIC_DRAW);
         // Tell WebGL how to pull out the texture coordinates from the textureCoord buffer into the textureCoord attribute.
-        var textureCoordAttributeLocation = GL.GetAttribLocation(_shaderProgram, "aTextureCoord");
+        var textureCoordAttributeLocation = GL.GetAttribLocation(_shaderProgram, "a_TextureCoord");
         GL.VertexAttribPointer(textureCoordAttributeLocation, 2, GL.FLOAT, false, 0, 0);
         GL.EnableVertexAttribArray(textureCoordAttributeLocation);
 
