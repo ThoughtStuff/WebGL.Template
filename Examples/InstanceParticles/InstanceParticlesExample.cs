@@ -20,8 +20,11 @@ sealed class InstanceParticlesExample : IGame
     private bool _mouseDown;
     private IEnumerable<Vector2> _spawnPositions = [];
     private JSObject? _shaderProgram;
-    private JSObject? _instanceVBO;
     private JSObject? _positionBuffer;
+    private JSObject? _instanceVBO;
+    private readonly List<JSObject> _buffers = [];
+    private readonly List<JSObject> _textures = [];
+    private readonly List<int> _vertexAttributeLocations = [];
     private List<int[]> _frameSetIndices = [[0]];
     private int _fpsMin = 24;
     private int _fpsMax = 24;
@@ -36,11 +39,12 @@ sealed class InstanceParticlesExample : IGame
                                                         "Basic/TextureUnlit_frag");
 
         // Load and bind texture (low-res for initial load)
-        var textureId = await textureLoader.LoadTexture("/textures/arrows-lowres.png");
+        var lowResTexture = await textureLoader.LoadTexture("/textures/arrows-lowres.png");
         GL.ActiveTexture(GL.TEXTURE0);
-        GL.BindTexture(GL.TEXTURE_2D, textureId);
+        GL.BindTexture(GL.TEXTURE_2D, lowResTexture);
         var textureUniformLoc = GL.GetUniformLocation(_shaderProgram, "u_Texture");
         GL.Uniform1i(textureUniformLoc, 0);
+        _textures.Add(lowResTexture);
 
         // Sprite Sheet parameters (see textures/arrows.json)
         int columnCount = 8;
@@ -93,6 +97,7 @@ sealed class InstanceParticlesExample : IGame
         _positionBuffer = GL.CreateBuffer();
         GL.BindBuffer(GL.ARRAY_BUFFER, _positionBuffer);
         GL.BufferData(GL.ARRAY_BUFFER, vertices, GL.STATIC_DRAW);
+        _buffers.Add(_positionBuffer);
 
         // Get attribute locations for position and texture coordinates
         var posLoc = GL.GetAttribLocation(_shaderProgram, "a_VertexPosition");
@@ -106,6 +111,7 @@ sealed class InstanceParticlesExample : IGame
                                stride: 4 * sizeof(float),
                                offset: 0);
         GL.EnableVertexAttribArray(posLoc);
+        _vertexAttributeLocations.Add(posLoc);
 
         // Enable the texture coordinate attribute
         GL.VertexAttribPointer(index: texLoc,
@@ -115,10 +121,12 @@ sealed class InstanceParticlesExample : IGame
                                stride: 4 * sizeof(float),
                                offset: 2 * sizeof(float));
         GL.EnableVertexAttribArray(texLoc);
+        _vertexAttributeLocations.Add(texLoc);
 
         // Create a buffer for instance data (translation and scale)
         _instanceVBO = GL.CreateBuffer();
         GL.BindBuffer(GL.ARRAY_BUFFER, _instanceVBO);
+        _buffers.Add(_instanceVBO);
 
         // Set up the instance attributes (transformation and sprite frame index)
         var instanceDataSize = Marshal.SizeOf<InstanceData>();
@@ -134,6 +142,7 @@ sealed class InstanceParticlesExample : IGame
                                normalized: false,
                                stride: instanceDataSize,
                                offset: transformRow0Offset);
+        _vertexAttributeLocations.Add(instanceTransformRow0Loc);
 
         // Set up TransformRow1 (a vec2 attribute)
         var transformRow1Offset = Marshal.OffsetOf<InstanceData>(nameof(InstanceData.TransformRow1)).ToInt32();
@@ -146,6 +155,7 @@ sealed class InstanceParticlesExample : IGame
                                normalized: false,
                                stride: instanceDataSize,
                                offset: transformRow1Offset);
+        _vertexAttributeLocations.Add(instanceTransformRow1Loc);
 
         // Set up Translation (a vec2 attribute)
         var translationOffset = Marshal.OffsetOf<InstanceData>(nameof(InstanceData.Translation)).ToInt32();
@@ -158,6 +168,7 @@ sealed class InstanceParticlesExample : IGame
                                normalized: false,
                                stride: instanceDataSize,
                                offset: translationOffset);
+        _vertexAttributeLocations.Add(instancePosLoc);
 
         // Set up SpriteIndex (a float attribute)
         var spriteIndexOffset = Marshal.OffsetOf<InstanceData>(nameof(InstanceData.SpriteIndex)).ToInt32();
@@ -170,6 +181,7 @@ sealed class InstanceParticlesExample : IGame
                                normalized: false,
                                stride: instanceDataSize,
                                offset: spriteIndexOffset);
+        _vertexAttributeLocations.Add(instanceSpriteIndexLoc);
 
         // Enable alpha blending for the textures which have an alpha channel
         GL.Enable(GL.BLEND);
@@ -186,28 +198,53 @@ sealed class InstanceParticlesExample : IGame
     {
         // Load the high-res texture
         string texturePath = "/textures/arrows.png";
-        var textureId = await textureLoader.LoadTexture(texturePath);
+        var highResTexture = await textureLoader.LoadTexture(texturePath);
         GL.ActiveTexture(GL.TEXTURE0);
-        GL.BindTexture(GL.TEXTURE_2D, textureId);
+        GL.BindTexture(GL.TEXTURE_2D, highResTexture);
+
+        // Delete the low-res texture
+        if (_textures.Count > 0)
+        {
+            var lowResTexture = _textures[0];
+            GL.DeleteTexture(lowResTexture);
+            lowResTexture.Dispose();
+            _textures.Clear();
+        }
+        _textures.Add(highResTexture);
     }
 
     public void Dispose()
     {
-        // Dispose of the instance VBO
-        if (_instanceVBO is not null)
+        // Disable all vertex attribute locations
+        foreach (var attributeLocation in _vertexAttributeLocations)
         {
-            GL.DeleteBuffer(_instanceVBO);
-            _instanceVBO.Dispose();
-            _instanceVBO = null;
+            GL.DisableVertexAttribArray(attributeLocation);
         }
+        _vertexAttributeLocations.Clear();
 
-        // Dispose of the position buffer
-        if (_positionBuffer is not null)
+        // Dispose of all buffer objects
+        _positionBuffer = null;
+        _instanceVBO = null;
+        foreach (var buffer in _buffers)
         {
-            GL.DeleteBuffer(_positionBuffer);
-            _positionBuffer.Dispose();
-            _positionBuffer = null;
+            if (buffer is not null)
+            {
+                GL.DeleteBuffer(buffer);
+                buffer.Dispose();
+            }
         }
+        _buffers.Clear();
+
+        // Dispose of all texture objects
+        foreach (var texture in _textures)
+        {
+            if (texture is not null)
+            {
+                GL.DeleteTexture(texture);
+                texture.Dispose();
+            }
+        }
+        _textures.Clear();
 
         // Dispose of the shader program
         if (_shaderProgram is not null)

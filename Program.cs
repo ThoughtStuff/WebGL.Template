@@ -15,12 +15,16 @@ Console.WriteLine("GLSL Version: " + glslVersion);
 
 // Bootstrap our Game which handles input, updates, and rendering
 using var game = new ExampleGame();
-// More examples from the Examples folder:
-// using var game = new HelloTriangle();
-// using var game = new HelloQuad();
-// using var game = new HelloTextureMap();
-// using var game = new HelloTetrahedron();
-// using var game = new InstanceParticlesExample();
+
+// Find more examples in the Examples folder
+// The GameChanger allows you to switch between examples using the PageUp and PageDown keys
+// using var game = new GameChanger(
+//     new HelloTriangle(),
+//     new HelloQuad(),
+//     new HelloTextureMap(),
+//     new HelloTetrahedron(),
+//     new InstanceParticlesExample()
+// );
 
 using var gameController = new GameController(game);
 await gameController.Start();
