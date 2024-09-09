@@ -9,7 +9,7 @@ class HelloTriangle : IGame
     public void InitializeScene(IShaderLoader shaderLoader)
     {
         // Load the shader program
-        var shaderProgram = shaderLoader.LoadShaderProgram("vertex", "Basic/ColorPassthrough_frag");
+        var shaderProgram = shaderLoader.LoadShaderProgram("Basic/ColorPassthrough_vert", "Basic/ColorPassthrough_frag");
 
         // POSITIONS
         // Create a buffer for the triangle's vertex positions.
