@@ -1,13 +1,13 @@
 using System.Runtime.InteropServices.JavaScript;
+using ThoughtStuff.GLSourceGen;
 using WebGL.Template.GameFramework;
 
 namespace WebGL.Template.Examples;
 
-sealed class HelloQuad : IGame
+sealed partial class HelloQuad : IGame
 {
     private JSObject? _shaderProgram;
-    private JSObject? _positionBuffer;
-    private JSObject? _colorBuffer;
+    private JSObject? _vertexBuffer;
     private readonly List<int> _vertexAttributeLocations = [];
 
     public string? OverlayText => "Hello, Quad";
@@ -17,47 +17,27 @@ sealed class HelloQuad : IGame
         // Load the shader program
         _shaderProgram = shaderLoader.LoadShaderProgram("Basic/ColorPassthrough_vert", "Basic/ColorPassthrough_frag");
 
-        // POSITIONS
-        // Create a buffer for the quad's vertex positions.
-        _positionBuffer = GL.CreateBuffer();
-        GL.BindBuffer(GL.ARRAY_BUFFER, _positionBuffer);
         // Define the vertex positions for the quad. Assume NDC coordinates [-1 ... 1].
-        Span<float> positions =
+        Span<ColorVertex2> vertices =
         [
-            -1.0f, 1.0f,
-            -1.0f, -1.0f,
-            1.0f, 1.0f,
-            1.0f, -1.0f
+            new(new(-1, 1), new(1, 0, 0, 1)),   // Red
+            new(new(-1, -1), new(0, 1, 0, 1)),  // Green
+            new(new(1, 1), new(0, 0, 1, 1)),    // Blue
+            new(new(1, -1), new(1, 1, 0, 1))    // Yellow
         ];
-        GL.BufferData(GL.ARRAY_BUFFER, positions, GL.STATIC_DRAW);
-        // Tell WebGL how to pull out the positions from the position buffer into the vertexPosition attribute.
-        var positionAttributeLocation = GL.GetAttribLocation(_shaderProgram, "a_VertexPosition");
-        GL.VertexAttribPointer(positionAttributeLocation, 2, GL.FLOAT, false, 0, 0);
-        GL.EnableVertexAttribArray(positionAttributeLocation);
-        _vertexAttributeLocations.Add(positionAttributeLocation);
-
-        // COLORS
-        // Create a buffer for the quad's colors.
-        _colorBuffer = GL.CreateBuffer();
-        GL.BindBuffer(GL.ARRAY_BUFFER, _colorBuffer);
-        // Define the colors for each vertex of the quad (Rainbow: Red, Green, Blue, Yellow).
-        Span<float> colors =
-        [
-            1.0f, 0.0f, 0.0f, 1.0f, // Red
-            0.0f, 1.0f, 0.0f, 1.0f, // Green
-            0.0f, 0.0f, 1.0f, 1.0f, // Blue
-            1.0f, 1.0f, 0.0f, 1.0f  // Yellow
-        ];
-        GL.BufferData(GL.ARRAY_BUFFER, colors, GL.STATIC_DRAW);
-        // Tell WebGL how to pull out the colors from the color buffer into the vertexColor attribute.
-        var colorAttributeLocation = GL.GetAttribLocation(_shaderProgram, "a_VertexColor");
-        GL.VertexAttribPointer(colorAttributeLocation, 4, GL.FLOAT, false, 0, 0);
-        GL.EnableVertexAttribArray(colorAttributeLocation);
-        _vertexAttributeLocations.Add(colorAttributeLocation);
+        // Create a buffer for the quad's vertices
+        _vertexBuffer = GL.CreateBuffer();
+        SetVertexBufferData(_shaderProgram, _vertexBuffer, vertices, _vertexAttributeLocations);
 
         // Set the clear color to cornflower blue
         GL.ClearColor(0.392f, 0.584f, 0.929f, 1.0f);
     }
+
+    [SetupVertexAttrib("Shaders/Basic/ColorPassthrough_vert.glsl")]
+    partial void SetVertexBufferData(JSObject shaderProgram,
+                                     JSObject vertexBuffer,
+                                     Span<ColorVertex2> vertices,
+                                     List<int> vertexAttributeLocations);
 
     public void Dispose()
     {
@@ -69,19 +49,11 @@ sealed class HelloQuad : IGame
         _vertexAttributeLocations.Clear();
 
         // Delete the position buffer
-        if (_positionBuffer is not null)
+        if (_vertexBuffer is not null)
         {
-            GL.DeleteBuffer(_positionBuffer);
-            _positionBuffer.Dispose();
-            _positionBuffer = null;
-        }
-
-        // Delete the color buffer
-        if (_colorBuffer is not null)
-        {
-            GL.DeleteBuffer(_colorBuffer);
-            _colorBuffer.Dispose();
-            _colorBuffer = null;
+            GL.DeleteBuffer(_vertexBuffer);
+            _vertexBuffer.Dispose();
+            _vertexBuffer = null;
         }
 
         // Delete the shader program
@@ -93,7 +65,7 @@ sealed class HelloQuad : IGame
     public void Render()
     {
         GL.Clear(GL.COLOR_BUFFER_BIT);
-        if (_positionBuffer is not null)
+        if (_vertexBuffer is not null)
         {
             GL.DrawArrays(GL.TRIANGLE_STRIP, 0, 4);
         }

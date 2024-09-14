@@ -1,16 +1,8 @@
-using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.JavaScript;
 using ThoughtStuff.GLSourceGen;
 using WebGL.Template.GameFramework;
 
 namespace WebGL.Template.Examples;
-
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
-struct ColorVertex2(Vector2 position, Vector4 color)
-{
-    public Vector2 Position = position;
-    public Vector4 Color = color;
-}
 
 sealed partial class HelloTriangle : IGame
 {
