@@ -9,4 +9,11 @@
     <!-- Embed any shader files as Resources so they can be loaded at runtime -->
     <EmbeddedResource Include="Shaders\**\*.glsl" />
   </ItemGroup>
+  <ItemGroup>
+    <!-- Include shader files as Additional Files so they can be used by source generation -->
+    <AdditionalFiles Include="Shaders\**\*.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ThoughtStuff.GLSourceGen" Version="1.0.0" />
+  </ItemGroup>
 </Project>
