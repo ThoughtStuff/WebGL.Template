@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PackageId>ThoughtStuff.WebGLTemplate</PackageId>
-    <PackageVersion>1.5.0</PackageVersion>
+    <PackageVersion>1.6.0</PackageVersion>
     <Title>WebGL Template</Title>
     <Authors>Jacob Foshee</Authors>
     <Description>A project template for creating WebGL-based WASM browser apps in C#.</Description>
