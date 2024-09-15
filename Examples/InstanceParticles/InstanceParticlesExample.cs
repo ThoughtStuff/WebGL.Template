@@ -1,5 +1,5 @@
-using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.JavaScript;
+using ThoughtStuff.GLSourceGen;
 using WebGL.Template.GameFramework;
 
 namespace WebGL.Template.Examples.InstanceParticles;
@@ -8,7 +8,7 @@ namespace WebGL.Template.Examples.InstanceParticles;
 // Animated Arrows by SpikerMan
 // https://spikerman.itch.io/animated-arrows-cursors
 
-sealed class InstanceParticlesExample : IGame
+sealed partial class InstanceParticlesExample : IGame
 {
     private const int SpawnParticleCount = 25;
     private const float ScaleMin = 0.01f;
@@ -20,8 +20,8 @@ sealed class InstanceParticlesExample : IGame
     private bool _mouseDown;
     private IEnumerable<Vector2> _spawnPositions = [];
     private JSObject? _shaderProgram;
-    private JSObject? _positionBuffer;
-    private JSObject? _instanceVBO;
+    private JSObject? _vertexBuffer;
+    private JSObject? _instanceBuffer;
     private readonly List<JSObject> _buffers = [];
     private readonly List<JSObject> _textures = [];
     private readonly List<int> _vertexAttributeLocations = [];
@@ -73,6 +73,18 @@ sealed class InstanceParticlesExample : IGame
         GL.Uniform1f(uPaddingBottomLoc, paddingBottom);
     }
 
+    [SetupVertexAttrib("Shaders/Transformed2D/SpriteSheet_vert.glsl")]
+    partial void BindVertexBufferData(JSObject shaderProgram,
+                                      JSObject vertexBuffer,
+                                      Span<TextureVertex2> vertices,
+                                      List<int> vertexAttributeLocations);
+
+    [SetupVertexAttrib("Shaders/Transformed2D/SpriteSheet_vert.glsl")]
+    partial void BindVertexBufferData(JSObject shaderProgram,
+                                      JSObject vertexBuffer,
+                                      Span<InstanceData> vertices,
+                                      List<int> vertexAttributeLocations);
+
     /// <inheritdoc/>
     public void InitializeScene(IShaderLoader shaderLoader)
     {
@@ -80,108 +92,33 @@ sealed class InstanceParticlesExample : IGame
             throw new InvalidOperationException("Shader program not initialized");
 
         // Define quad vertices with positions and texture coordinates
-        Span<float> vertices =
+        Span<TextureVertex2> vertices =
         [
-            // First Triangle
-            -0.5f,  0.5f,  0.0f, 1.0f, // Top-left
-            0.5f,  0.5f,  1.0f, 1.0f, // Top-right
-            -0.5f, -0.5f,  0.0f, 0.0f, // Bottom-left
-
-            // Second Triangle
-            0.5f,  0.5f,  1.0f, 1.0f, // Top-right
-            0.5f, -0.5f,  1.0f, 0.0f, // Bottom-right
-            -0.5f, -0.5f,  0.0f, 0.0f  // Bottom-left
+            new(new(-0.5f, 0.5f), new(0.0f, 1.0f)), // Top-left
+            new(new(0.5f, 0.5f), new(1.0f, 1.0f)), // Top-right
+            new(new(-0.5f, -0.5f), new(0.0f, 0.0f)), // Bottom-left
+            new(new(0.5f, 0.5f), new(1.0f, 1.0f)), // Top-right
+            new(new(0.5f, -0.5f), new(1.0f, 0.0f)), // Bottom-right
+            new(new(-0.5f, -0.5f), new(0.0f, 0.0f)) // Bottom-left
         ];
 
         // Create and bind the position and texture buffer for the quad vertices
-        _positionBuffer = GL.CreateBuffer();
-        GL.BindBuffer(GL.ARRAY_BUFFER, _positionBuffer);
-        GL.BufferData(GL.ARRAY_BUFFER, vertices, GL.STATIC_DRAW);
-        _buffers.Add(_positionBuffer);
+        _vertexBuffer = GL.CreateBuffer();
+        _buffers.Add(_vertexBuffer);
+        BindVertexBufferData(_shaderProgram, _vertexBuffer, vertices, _vertexAttributeLocations);
 
-        // Get attribute locations for position and texture coordinates
-        var posLoc = GL.GetAttribLocation(_shaderProgram, "a_VertexPosition");
-        var texLoc = GL.GetAttribLocation(_shaderProgram, "a_TextureCoord");
-
-        // Enable the position attribute
-        GL.VertexAttribPointer(index: posLoc,
-                               size: 2,
-                               type: GL.FLOAT,
-                               normalized: false,
-                               stride: 4 * sizeof(float),
-                               offset: 0);
-        GL.EnableVertexAttribArray(posLoc);
-        _vertexAttributeLocations.Add(posLoc);
-
-        // Enable the texture coordinate attribute
-        GL.VertexAttribPointer(index: texLoc,
-                               size: 2,
-                               type: GL.FLOAT,
-                               normalized: false,
-                               stride: 4 * sizeof(float),
-                               offset: 2 * sizeof(float));
-        GL.EnableVertexAttribArray(texLoc);
-        _vertexAttributeLocations.Add(texLoc);
-
-        // Create a buffer for instance data (translation and scale)
-        _instanceVBO = GL.CreateBuffer();
-        GL.BindBuffer(GL.ARRAY_BUFFER, _instanceVBO);
-        _buffers.Add(_instanceVBO);
-
-        // Set up the instance attributes (transformation and sprite frame index)
-        var instanceDataSize = Marshal.SizeOf<InstanceData>();
-
-        // Set up TransformRow0 (a vec2 attribute)
-        var transformRow0Offset = Marshal.OffsetOf<InstanceData>(nameof(InstanceData.TransformRow0)).ToInt32();
-        var instanceTransformRow0Loc = GL.GetAttribLocation(_shaderProgram, "a_InstanceTransformRow0");
-        GL.EnableVertexAttribArray(instanceTransformRow0Loc);
-        GL.VertexAttribDivisor(instanceTransformRow0Loc, 1);
-        GL.VertexAttribPointer(index: instanceTransformRow0Loc,
-                               size: Marshal.SizeOf<Vector2>() / sizeof(float), // 2
-                               type: GL.FLOAT,
-                               normalized: false,
-                               stride: instanceDataSize,
-                               offset: transformRow0Offset);
-        _vertexAttributeLocations.Add(instanceTransformRow0Loc);
-
-        // Set up TransformRow1 (a vec2 attribute)
-        var transformRow1Offset = Marshal.OffsetOf<InstanceData>(nameof(InstanceData.TransformRow1)).ToInt32();
-        var instanceTransformRow1Loc = GL.GetAttribLocation(_shaderProgram, "a_InstanceTransformRow1");
-        GL.EnableVertexAttribArray(instanceTransformRow1Loc);
-        GL.VertexAttribDivisor(instanceTransformRow1Loc, 1);
-        GL.VertexAttribPointer(index: instanceTransformRow1Loc,
-                               size: Marshal.SizeOf<Vector2>() / sizeof(float), // 2
-                               type: GL.FLOAT,
-                               normalized: false,
-                               stride: instanceDataSize,
-                               offset: transformRow1Offset);
-        _vertexAttributeLocations.Add(instanceTransformRow1Loc);
-
-        // Set up Translation (a vec2 attribute)
-        var translationOffset = Marshal.OffsetOf<InstanceData>(nameof(InstanceData.Translation)).ToInt32();
-        var instancePosLoc = GL.GetAttribLocation(_shaderProgram, "a_InstanceTranslation");
-        GL.EnableVertexAttribArray(instancePosLoc);
-        GL.VertexAttribDivisor(instancePosLoc, 1);
-        GL.VertexAttribPointer(index: instancePosLoc,
-                               size: Marshal.SizeOf<Vector2>() / sizeof(float), // 2
-                               type: GL.FLOAT,
-                               normalized: false,
-                               stride: instanceDataSize,
-                               offset: translationOffset);
-        _vertexAttributeLocations.Add(instancePosLoc);
-
-        // Set up SpriteIndex (a float attribute)
-        var spriteIndexOffset = Marshal.OffsetOf<InstanceData>(nameof(InstanceData.SpriteIndex)).ToInt32();
-        var instanceSpriteIndexLoc = GL.GetAttribLocation(_shaderProgram, "a_InstanceFrameIndex");
-        GL.EnableVertexAttribArray(instanceSpriteIndexLoc);
-        GL.VertexAttribDivisor(instanceSpriteIndexLoc, 1);
-        GL.VertexAttribPointer(index: instanceSpriteIndexLoc,
-                               size: 1,
-                               type: GL.FLOAT,
-                               normalized: false,
-                               stride: instanceDataSize,
-                               offset: spriteIndexOffset);
-        _vertexAttributeLocations.Add(instanceSpriteIndexLoc);
+        // Create a buffer for instance data (transformation and sprite frame index)
+        _instanceBuffer = GL.CreateBuffer();
+        _buffers.Add(_instanceBuffer);
+        Span<InstanceData> instanceData = stackalloc InstanceData[1];
+        List<int> instanceAttribLocations = [];
+        BindVertexBufferData(_shaderProgram, _instanceBuffer, instanceData, instanceAttribLocations);
+        foreach (var location in instanceAttribLocations)
+        {
+            // Set divisor to 1 so that the buffer is treated as instance data (1 per particle)
+            GL.VertexAttribDivisor(location, 1);
+        }
+        _vertexAttributeLocations.AddRange(instanceAttribLocations);
 
         // Enable alpha blending for the textures which have an alpha channel
         GL.Enable(GL.BLEND);
@@ -226,8 +163,8 @@ sealed class InstanceParticlesExample : IGame
         _vertexAttributeLocations.Clear();
 
         // Dispose of all buffer objects
-        _positionBuffer = null;
-        _instanceVBO = null;
+        _vertexBuffer = null;
+        _instanceBuffer = null;
         foreach (var buffer in _buffers)
         {
             if (buffer is not null)
@@ -260,25 +197,25 @@ sealed class InstanceParticlesExample : IGame
     {
         GL.Clear(GL.COLOR_BUFFER_BIT);
 
-        if (_instanceVBO is null || _shaderProgram is null || _positionBuffer is null)
+        if (_instanceBuffer is null || _shaderProgram is null || _vertexBuffer is null)
             return;
 
         int particleCount = _particles.Count;
         Span<InstanceData> instanceData = stackalloc InstanceData[particleCount];
         for (int i = 0; i < particleCount; i++)
         {
-            var spriteIndex = _particles[i].FrameIndex;
+            var frameIndex = _particles[i].FrameIndex;
             var transform = Matrix3x2.CreateRotation(_particles[i].Rotation) *
                             Matrix3x2.CreateScale(_particles[i].Scale) *
                             Matrix3x2.CreateTranslation(_particles[i].Position);
-            instanceData[i] = new InstanceData(transform, spriteIndex);
+            instanceData[i] = new InstanceData(transform, frameIndex);
         }
         // Update the instance VBO with the latest data
-        GL.BindBuffer(GL.ARRAY_BUFFER, _instanceVBO);
+        GL.BindBuffer(GL.ARRAY_BUFFER, _instanceBuffer);
         GL.BufferData(GL.ARRAY_BUFFER, instanceData, GL.STREAM_DRAW);
 
         // Bind the vertex buffer for the quad
-        GL.BindBuffer(GL.ARRAY_BUFFER, _positionBuffer);
+        GL.BindBuffer(GL.ARRAY_BUFFER, _vertexBuffer);
 
         // Draw all particles in a single call
         GL.DrawArraysInstanced(GL.TRIANGLES, 0, 6, particleCount);
