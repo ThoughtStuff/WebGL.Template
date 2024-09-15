@@ -1,17 +1,10 @@
-using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.JavaScript;
+using ThoughtStuff.GLSourceGen;
 using WebGL.Template.GameFramework;
 
 namespace WebGL.Template.Examples;
 
-[StructLayout(LayoutKind.Sequential, Pack = 1)]
-struct ColorVertex3(Vector3 position, Vector3 color)
-{
-    public Vector3 Position = position;
-    public Vector3 Color = color;
-}
-
-sealed class HelloTetrahedron : IGame
+sealed partial class HelloTetrahedron : IGame
 {
     private float _rotationAngleX = 0f;
     private float _rotationAngleY = 0f;
@@ -43,47 +36,26 @@ sealed class HelloTetrahedron : IGame
         Span<ColorVertex3> vertices =
         [
             // Red face
-            new ColorVertex3(new(0.5f, 0.5f, 0.5f), new(1f, 0f, 0f)),
-            new ColorVertex3(new(-0.5f, -0.5f, 0.5f), new(1f, 0f, 0f)),
-            new ColorVertex3(new(-0.5f, 0.5f, -0.5f), new(1f, 0f, 0f)),
+            new (new(0.5f, 0.5f, 0.5f), new(1f, 0f, 0f)),
+            new (new(-0.5f, -0.5f, 0.5f), new(1f, 0f, 0f)),
+            new (new(-0.5f, 0.5f, -0.5f), new(1f, 0f, 0f)),
             // Green face
-            new ColorVertex3(new(0.5f, -0.5f, -0.5f), new(0f, 1f, 0f)),
-            new ColorVertex3(new(-0.5f, -0.5f, 0.5f), new(0f, 1f, 0f)),
-            new ColorVertex3(new(-0.5f, 0.5f, -0.5f), new(0f, 1f, 0f)),
+            new (new(0.5f, -0.5f, -0.5f), new(0f, 1f, 0f)),
+            new (new(-0.5f, -0.5f, 0.5f), new(0f, 1f, 0f)),
+            new (new(-0.5f, 0.5f, -0.5f), new(0f, 1f, 0f)),
             // Blue face
-            new ColorVertex3(new(0.5f, 0.5f, 0.5f), new(0f, 0f, 1f)),
-            new ColorVertex3(new(-0.5f, -0.5f, 0.5f), new(0f, 0f, 1f)),
-            new ColorVertex3(new(0.5f, -0.5f, -0.5f), new(0f, 0f, 1f)),
+            new (new(0.5f, 0.5f, 0.5f), new(0f, 0f, 1f)),
+            new (new(-0.5f, -0.5f, 0.5f), new(0f, 0f, 1f)),
+            new (new(0.5f, -0.5f, -0.5f), new(0f, 0f, 1f)),
             // Yellow face
-            new ColorVertex3(new(0.5f, 0.5f, 0.5f), new(1f, 1f, 0f)),
-            new ColorVertex3(new(0.5f, -0.5f, -0.5f), new(1f, 1f, 0f)),
-            new ColorVertex3(new(-0.5f, 0.5f, -0.5f), new(1f, 1f, 0f))
+            new (new(0.5f, 0.5f, 0.5f), new(1f, 1f, 0f)),
+            new (new(0.5f, -0.5f, -0.5f), new(1f, 1f, 0f)),
+            new (new(-0.5f, 0.5f, -0.5f), new(1f, 1f, 0f))
         ];
 
         // Create and bind the vertex buffer
         _vertexBuffer = GL.CreateBuffer();
-        GL.BindBuffer(GL.ARRAY_BUFFER, _vertexBuffer);
-        GL.BufferData(GL.ARRAY_BUFFER, vertices, GL.STATIC_DRAW);
-
-        var positionLocation = GL.GetAttribLocation(_shaderProgram, "a_VertexPosition");
-        GL.EnableVertexAttribArray(positionLocation);
-        _vertexAttributeLocations.Add(positionLocation);
-        GL.VertexAttribPointer(positionLocation,
-                               size: 3,
-                               type: GL.FLOAT,
-                               normalized: false,
-                               stride: Marshal.SizeOf<ColorVertex3>(),
-                               offset: Marshal.OffsetOf<ColorVertex3>(nameof(ColorVertex3.Position)).ToInt32());
-
-        var colorLocation = GL.GetAttribLocation(_shaderProgram, "a_VertexColor");
-        GL.EnableVertexAttribArray(colorLocation);
-        _vertexAttributeLocations.Add(colorLocation);
-        GL.VertexAttribPointer(colorLocation,
-                               size: 3,
-                               type: GL.FLOAT,
-                               normalized: false,
-                               stride: Marshal.SizeOf<ColorVertex3>(),
-                               offset: Marshal.OffsetOf<ColorVertex3>(nameof(ColorVertex3.Color)).ToInt32());
+        BindVertexBufferData(_shaderProgram, _vertexBuffer, vertices, _vertexAttributeLocations);
 
         // Enable depth testing
         GL.Enable(GL.DEPTH_TEST);
@@ -91,6 +63,12 @@ sealed class HelloTetrahedron : IGame
         // Set the clear color to black
         GL.ClearColor(0, 0, 0, 1);
     }
+
+    [SetupVertexAttrib("Shaders/Perspective3D/ColorPassthrough_vert.glsl")]
+    partial void BindVertexBufferData(JSObject shaderProgram,
+                                      JSObject vertexBuffer,
+                                      Span<ColorVertex3> vertices,
+                                      List<int> vertexAttributeLocations);
 
     public Task LoadAssetsExtendedAsync(IShaderLoader shaderLoader, ITextureLoader textureLoader)
     {
