@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices.JavaScript;
+using ThoughtStuff.GLSourceGen;
 using WebGL.Template.GameFramework;
 
 namespace WebGL.Template.Examples;
@@ -8,15 +9,13 @@ namespace WebGL.Template.Examples;
 /// The texture map has transparent pixels which allow the background color to show through.
 /// An initial low-res texture is loaded first, then replaced with a high-res texture.
 /// </summary>
-sealed class HelloTextureMap : IGame
+sealed partial class HelloTextureMap : IGame
 {
     private JSObject? _shaderProgram;
     private JSObject? _lowResTextureId;
     private JSObject? _highResTextureId;
-    private JSObject? _positionBuffer;
-    private JSObject? _textureCoordBuffer;
+    private JSObject? _vertexBuffer;
     private readonly List<int> _vertexAttributeLocations = [];
-
 
     public string? OverlayText => "Hello, Texture Map";
 
@@ -45,43 +44,17 @@ sealed class HelloTextureMap : IGame
         if (_shaderProgram is null)
             throw new InvalidOperationException("Shader program not loaded.");
 
-        // POSITIONS
-        // Create a buffer for the quad's vertex positions.
-        _positionBuffer = GL.CreateBuffer();
-        GL.BindBuffer(GL.ARRAY_BUFFER, _positionBuffer);
-        // Define the vertex positions for the quad. Assume NDC coordinates [-1 ... 1].
-        Span<float> positions =
+        // Define the vertices for the quad. Assume NDC coordinates [-1 ... 1].
+        Span<TextureVertex2> vertices =
         [
-            -1.0f, 1.0f,
-            -1.0f, -1.0f,
-            1.0f, 1.0f,
-            1.0f, -1.0f
+            new(new(-1, 1), new(0, 0)),
+            new(new(-1, -1), new(0, 1)),
+            new(new(1, 1), new(1, 0)),
+            new(new(1, -1), new(1, 1))
         ];
-        GL.BufferData(GL.ARRAY_BUFFER, positions, GL.STATIC_DRAW);
-        // Tell WebGL how to pull out the positions from the position buffer into the vertexPosition attribute.
-        var positionAttributeLocation = GL.GetAttribLocation(_shaderProgram, "a_VertexPosition");
-        GL.VertexAttribPointer(positionAttributeLocation, 2, GL.FLOAT, false, 0, 0);
-        GL.EnableVertexAttribArray(positionAttributeLocation);
-        _vertexAttributeLocations.Add(positionAttributeLocation);
-
-        // TEXTURE COORDINATES
-        // Create a buffer for the quad's texture coordinates.
-        _textureCoordBuffer = GL.CreateBuffer();
-        GL.BindBuffer(GL.ARRAY_BUFFER, _textureCoordBuffer);
-        // Define the texture coordinates for each vertex of the quad.
-        Span<float> textureCoords =
-        [
-            0.0f, 0.0f,
-            0.0f, 1.0f,
-            1.0f, 0.0f,
-            1.0f, 1.0f
-        ];
-        GL.BufferData(GL.ARRAY_BUFFER, textureCoords, GL.STATIC_DRAW);
-        // Tell WebGL how to pull out the texture coordinates from the textureCoord buffer into the textureCoord attribute.
-        var textureCoordAttributeLocation = GL.GetAttribLocation(_shaderProgram, "a_TextureCoord");
-        GL.VertexAttribPointer(textureCoordAttributeLocation, 2, GL.FLOAT, false, 0, 0);
-        GL.EnableVertexAttribArray(textureCoordAttributeLocation);
-        _vertexAttributeLocations.Add(textureCoordAttributeLocation);
+        // Create a buffer for the quad's vertices
+        _vertexBuffer = GL.CreateBuffer();
+        BindVertexBufferData(_shaderProgram, _vertexBuffer, vertices, _vertexAttributeLocations);
 
         // Enable alpha blending for the textures which have an alpha channel
         GL.Enable(GL.BLEND);
@@ -90,6 +63,12 @@ sealed class HelloTextureMap : IGame
         // Set the clear color to cornflower blue
         GL.ClearColor(0.392f, 0.584f, 0.929f, 1.0f);
     }
+
+    [SetupVertexAttrib("Shaders/Basic/TextureUnlit_vert.glsl")]
+    partial void BindVertexBufferData(JSObject shaderProgram,
+                                      JSObject vertexBuffer,
+                                      Span<TextureVertex2> vertices,
+                                      List<int> vertexAttributeLocations);
 
     public async Task LoadAssetsExtendedAsync(IShaderLoader shaderLoader, ITextureLoader textureLoader)
     {
@@ -114,7 +93,7 @@ sealed class HelloTextureMap : IGame
     public void Render()
     {
         GL.Clear(GL.COLOR_BUFFER_BIT);
-        if (_positionBuffer is not null)
+        if (_vertexBuffer is not null)
         {
             GL.DrawArrays(GL.TRIANGLE_STRIP, 0, 4);
         }
@@ -132,20 +111,12 @@ sealed class HelloTextureMap : IGame
         }
         _vertexAttributeLocations.Clear();
 
-        // Delete the position buffer
-        if (_positionBuffer is not null)
+        // Delete the vertex buffer
+        if (_vertexBuffer is not null)
         {
-            GL.DeleteBuffer(_positionBuffer);
-            _positionBuffer.Dispose();
-            _positionBuffer = null;
-        }
-
-        // Delete the texture coordinate buffer
-        if (_textureCoordBuffer is not null)
-        {
-            GL.DeleteBuffer(_textureCoordBuffer);
-            _textureCoordBuffer.Dispose();
-            _textureCoordBuffer = null;
+            GL.DeleteBuffer(_vertexBuffer);
+            _vertexBuffer.Dispose();
+            _vertexBuffer = null;
         }
 
         // Delete the low-res texture if it hasn't been deleted already
