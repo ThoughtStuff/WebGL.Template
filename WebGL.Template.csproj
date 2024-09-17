@@ -14,6 +14,6 @@
     <AdditionalFiles Include="Shaders\**\*.glsl" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="ThoughtStuff.GLSourceGen" Version="1.0.0" />
+    <PackageReference Include="ThoughtStuff.GLSourceGen" Version="1.0.1" />
   </ItemGroup>
 </Project>
